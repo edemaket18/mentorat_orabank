@@ -1,0 +1,21 @@
+import axios from 'axios';
+import './auth.api';
+
+describe('auth interceptor', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
+  it('adds the bearer token to requests made through axios', () => {
+    localStorage.setItem('authToken', 'test-token');
+
+    const interceptor = axios.interceptors.request.handlers.find(
+      (handler) => typeof handler.fulfilled === 'function'
+    );
+
+    const config = { headers: {} } as any;
+    const result = interceptor?.fulfilled?.(config);
+
+    expect(result.headers.Authorization).toBe('Bearer test-token');
+  });
+});

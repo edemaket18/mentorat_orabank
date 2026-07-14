@@ -1,0 +1,18 @@
+@startuml SequenceLogin
+
+actor Utilisateur
+participant FE
+participant BE
+participant DB
+
+Utilisateur -> FE : Formulaire login
+FE -> BE : POST /api/auth/login
+BE -> DB : findOne(email)
+DB --> BE : User + mot de passe
+BE -> BE : Vérifie mot de passe
+BE -> FE : 200 OK + token
+
+@enduml
+
+  
+ 

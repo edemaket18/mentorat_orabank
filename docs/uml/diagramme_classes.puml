@@ -1,0 +1,59 @@
+@startuml DiagrammeDeClasses
+
+class User {
+  +_id: ObjectId
+  +firstName: string
+  +lastName: string
+  +email: string
+  +password: string
+  +role: string
+  +matchPassword(pw: string): boolean
+}
+
+class Profile {
+  +_id: ObjectId
+  +user: ObjectId
+  +bio: string
+  +skills: string[]
+  +socialLinks: object
+}
+
+class Mentorship {
+  +_id: ObjectId
+  +mentor: ObjectId
+  +mentee: ObjectId
+  +startDate: Date
+  +endDate: Date
+  +status: string
+}
+
+class ExperienceShare {
+  +_id: ObjectId
+  +author: ObjectId
+  +title: string
+  +content: string
+  +createdAt: Date
+}
+
+class Skill {
+  +_id: ObjectId
+  +name: string
+  +description: string
+}
+
+class Report {
+  +_id: ObjectId
+  +reporter: ObjectId
+  +targetUser: ObjectId
+  +reason: string
+  +status: string
+  +createdAt: Date
+}
+
+User "1" -- "1" Profile
+User "1" -- "*" Mentorship : mentor/mentee
+User "1" -- "*" ExperienceShare : auteur
+User "1" -- "*" Report : a signalé
+Skill "*" -- "*" Profile : compétences
+
+@enduml

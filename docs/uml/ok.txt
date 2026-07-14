@@ -1,0 +1,295 @@
+ Diagramme de classes
+
++------------------+
+|      User        |
++------------------+
+| _id              |
+| firstName        |
+| lastName         |
+| email            |
+| password         |
+| role             |
+| createdAt        |
+| updatedAt        |
++------------------+
+          |
+          | 1
+          |---------+
+                    | 1
+            +------------------+
+            |     Profile      |
+            +------------------+
+            | _id              |
+            | user (ref)       |
+            | bio              |
+            | skills           |
+            | location         |
+            | socialLinks      |
+            +------------------+
+
++-----------------------+     +------------------------+
+|     Mentorship        |     |     ExperienceShare     |
++-----------------------+     +------------------------+
+| _id                   |     | _id                    |
+| mentor (ref User)     |     | user (ref User)        |
+| mentee (ref User)     |     | title                  |
+| topic                 |     | content                |
+| status                |     | createdAt              |
+| createdAt             |     +------------------------+
++-----------------------+
+
++-------------------+     +-------------------+
+|      Report       |     |      Skill        |
++-------------------+     +-------------------+
+| _id               |     | _id               |
+| reporter (ref)    |     | name              |
+| reportedUser (ref)|     +-------------------+
+| message           |
+| createdAt         |
++-------------------+
+
+
+
+Diagramme des routes API REST
+
+/api/auth
+├── POST    /register           => Création de compte
+├── POST    /login              => Connexion
+├── GET     /me                 => Données utilisateur connecté
+
+/api/profiles
+├── GET     /                  => Liste des profils
+├── GET     /:id               => Profil par ID
+├── PUT     /:id               => Modifier un profil
+
+/api/students
+├── GET     /                  => Liste des étudiants
+├── GET     /:id               => Étudiant par ID
+
+/api/mentorships
+├── GET     /                  => Liste
+├── POST    /                  => Créer une demande
+├── PUT     /:id/status        => Modifier statut
+
+/api/experiences
+├── GET     /                  => Voir les expériences
+├── POST    /                  => Partager une expérience
+
+/api/skills
+├── GET     /                  => Liste des compétences
+├── POST    /                  => Ajouter
+
+/api/reports
+├── POST    /                  => Signaler un utilisateur
+├── GET     /                  => Voir les signalements (admin)
+/api/users
+├── GET     /                  => Liste des utilisateurs
+├── GET     /:id               => Utilisateur par ID
+├── PUT     /:id               => Modifier un utilisateur
+├── DELETE  /:id               => Supprimer un utilisateur
+/api/notifications
+├── GET     /                  => Voir les notifications
+├── POST    /                  => Créer une notification
+/api/notifications/:id
+├── PUT     /:id               => Marquer comme lu
+/api/notifications/:id
+├── DELETE  /:id               => Supprimer une notification
+/api/notifications/:id
+├── GET     /:id               => Voir une notification par ID
+ 
+
+Diagrammes de séquence
+a) Inscription d’un utilisateur
+
+ Utilisateur -> Frontend : Remplit formulaire /register
+Frontend -> Backend : POST /api/auth/register
+Backend -> MongoDB : Vérifie si l’utilisateur existe
+Backend -> MongoDB : Crée User et Profile
+Backend -> Frontend : Retourne token + infos utilisateur
+Frontend -> Utilisateur : Affiche message de succès
+
+
+b) Connexion d’un utilisateur
+
+Utilisateur -> Frontend : Remplit formulaire /login
+Frontend -> Backend : POST /api/auth/login
+Backend -> MongoDB : Vérifie les identifiants
+Backend -> Frontend : Retourne token + infos utilisateur
+Frontend -> Utilisateur : Affiche message de succès
+
+
+
+c) Création d’un profil
+Utilisateur -> Frontend : Remplit formulaire /profiles
+Frontend -> Backend : POST /api/profiles
+Backend -> MongoDB : Crée le profil
+Backend -> Frontend : Retourne les infos du profil
+Frontend -> Utilisateur : Affiche message de succès
+
+
+d) Création d’une demande de mentorat
+Utilisateur -> Frontend : Remplit formulaire /mentorships
+Frontend -> Backend : POST /api/mentorships
+Backend -> MongoDB : Crée la demande de mentorat
+Backend -> Frontend : Retourne les infos de la demande
+Frontend -> Utilisateur : Affiche message de succès
+
+e) Partage d’une expérience
+Utilisateur -> Frontend : Remplit formulaire /experiences
+Frontend -> Backend : POST /api/experiences
+Backend -> MongoDB : Crée l’expérience
+Backend -> Frontend : Retourne les infos de l’expérience
+Frontend -> Utilisateur : Affiche message de succès
+
+f) Signaler un utilisateur
+Utilisateur -> Frontend : Remplit formulaire /reports
+Frontend -> Backend : POST /api/reports
+Backend -> MongoDB : Crée le signalement
+Backend -> Frontend : Retourne les infos du signalement
+Frontend -> Utilisateur : Affiche message de succès
+
+
+g) Consultation des notifications
+Utilisateur -> Frontend : Ouvre la page des notifications
+Frontend -> Backend : GET /api/notifications
+Backend -> MongoDB : Récupère les notifications
+Backend -> Frontend : Retourne les notifications
+Frontend -> Utilisateur : Affiche les notifications
+
+
+h) Marquer une notification comme lue
+Utilisateur -> Frontend : Clique sur notification
+Frontend -> Backend : PUT /api/notifications/:id
+Backend -> MongoDB : Met à jour la notification
+Backend -> Frontend : Retourne les infos de la notification
+Frontend -> Utilisateur : Affiche message de succès
+
+
+i) Suppression d’une notification
+Utilisateur -> Frontend : Clique sur supprimer notification
+Frontend -> Backend : DELETE /api/notifications/:id
+Backend -> MongoDB : Supprime la notification
+Backend -> Frontend : Retourne un message de succès
+Frontend -> Utilisateur : Affiche message de succès
+
+j) Consultation du profil utilisateur
+Utilisateur -> Frontend : Ouvre la page de profil
+Frontend -> Backend : GET /api/profiles/:id
+Backend -> MongoDB : Récupère les infos du profil
+Backend -> Frontend : Retourne les infos du profil
+Frontend -> Utilisateur : Affiche les infos du profil
+
+k) Modification du profil utilisateur
+Utilisateur -> Frontend : Remplit formulaire de modification
+Frontend -> Backend : PUT /api/profiles/:id
+Backend -> MongoDB : Met à jour le profil
+Backend -> Frontend : Retourne les infos mises à jour du profil
+Frontend -> Utilisateur : Affiche message de succès
+
+l) Consultation de la liste des étudiants
+Utilisateur -> Frontend : Ouvre la page des étudiants
+Frontend -> Backend : GET /api/users
+Backend -> MongoDB : Récupère la liste des utilisateurs
+Backend -> Frontend : Retourne la liste des utilisateurs
+Frontend -> Utilisateur : Affiche la liste des utilisateurs
+
+m) Consultation des détails d’un étudiant
+Utilisateur -> Frontend : Ouvre la page de l’étudiant
+Frontend -> Backend : GET /api/users/:id
+Backend -> MongoDB : Récupère les infos de l’étudiant
+Backend -> Frontend : Retourne les infos de l’étudiant
+Frontend -> Utilisateur : Affiche les infos de l’étudiant
+
+n) Modification des informations d’un utilisateur
+Utilisateur -> Frontend : Remplit formulaire de modification
+Frontend -> Backend : PUT /api/users/:id
+Backend -> MongoDB : Met à jour les infos de l’étudiant
+Backend -> Frontend : Retourne les infos mises à jour de l’étudiant
+Frontend -> Utilisateur : Affiche message de succès
+
+
+o) Suppression d’un utilisateur
+Utilisateur -> Frontend : Clique sur supprimer utilisateur
+Frontend -> Backend : DELETE /api/users/:id
+Backend -> MongoDB : Supprime l’utilisateur
+Backend -> Frontend : Retourne un message de succès
+Frontend -> Utilisateur : Affiche message de succès
+
+
+p) Consultation de la liste des compétences
+Utilisateur -> Frontend : Ouvre la page des compétences
+Frontend -> Backend : GET /api/skills
+Backend -> MongoDB : Récupère la liste des compétences
+Backend -> Frontend : Retourne la liste des compétences
+Frontend -> Utilisateur : Affiche la liste des compétences
+
+
+q) Ajout d’une compétence
+Utilisateur -> Frontend : Remplit formulaire d’ajout de compétence
+Frontend -> Backend : POST /api/skills
+Backend -> MongoDB : Crée la compétence
+Backend -> Frontend : Retourne les infos de la compétence
+Frontend -> Utilisateur : Affiche message de succès
+
+
+r) Consultation de la liste des signalements
+Utilisateur -> Frontend : Ouvre la page des signalements
+Frontend -> Backend : GET /api/reports
+Backend -> MongoDB : Récupère la liste des signalements
+Backend -> Frontend : Retourne la liste des signalements
+Frontend -> Utilisateur : Affiche la liste des signalements
+
+
+s) Consultation des détails d’un signalement
+Utilisateur -> Frontend : Ouvre la page du signalement
+Frontend -> Backend : GET /api/reports/:id
+Backend -> MongoDB : Récupère les infos du signalement
+Backend -> Frontend : Retourne les infos du signalement
+Frontend -> Utilisateur : Affiche les infos du signalement
+
+
+t) Consultation de la liste des mentorats
+Utilisateur -> Frontend : Ouvre la page des mentorats
+Frontend -> Backend : GET /api/mentorships
+Backend -> MongoDB : Récupère la liste des mentorats
+Backend -> Frontend : Retourne la liste des mentorats
+Frontend -> Utilisateur : Affiche la liste des mentorats
+
+
+u) Modification du statut d’un mentorat
+Utilisateur -> Frontend : Remplit formulaire de modification de statut
+Frontend -> Backend : PUT /api/mentorships/:id
+Backend -> MongoDB : Met à jour le statut du mentorat
+Backend -> Frontend : Retourne les infos mises à jour du mentorat
+Frontend -> Utilisateur : Affiche message de succès
+
+
+v) Consultation de la liste des expériences partagées
+Utilisateur -> Frontend : Ouvre la page des expériences
+Frontend -> Backend : GET /api/experiences
+Backend -> MongoDB : Récupère la liste des expériences
+Backend -> Frontend : Retourne la liste des expériences
+Frontend -> Utilisateur : Affiche la liste des expériences
+
+
+w) Partage d’une expérience
+Utilisateur -> Frontend : Remplit formulaire de partage d’expérience
+Frontend -> Backend : POST /api/experiences
+Backend -> MongoDB : Crée l’expérience
+Backend -> Frontend : Retourne les infos de l’expérience
+Frontend -> Utilisateur : Affiche message de succès
+
+
+ 
+ Demande de mentorat
+
+ Utilisateur (mentee) -> Frontend : Formulaire demande
+Frontend -> Backend : POST /api/mentorships
+Backend -> MongoDB : Crée une entrée Mentorship
+Backend -> Frontend : Confirmation
+Frontend -> Utilisateur (mentee) : Affiche confirmation
+Mentor -> Frontend : Notification nouvelle demande
+Frontend -> Backend : GET /api/notifications
+Backend -> MongoDB : Récupère notifications
+Frontend -> Frontend : Affiche notifications
+

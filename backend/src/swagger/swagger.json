@@ -1,0 +1,162 @@
+ {
+   
+  "info": {
+    "title": "OraBank Mentorat API",
+    "version": "1.0.0",
+    "description": "Documentation de l’API pour la plateforme de mentorat OraBank.",
+    "contact": {
+      "name": "Support alpha080API",
+      "email": "supportalpha080API@example.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/api"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Inscription d’un utilisateur",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "email": { "type": "string", "format": "email" },
+                  "password": { "type": "string", "format": "password" },
+                  "role": { "type": "string" }
+                },
+                "required": ["name", "email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Utilisateur créé" },
+          "400": { "description": "Requête invalide" }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Connexion utilisateur",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Connexion réussie" },
+          "401": { "description": "Identifiants invalides" }
+        }
+      }
+    },
+    "/users/me": {
+      "get": {
+        "summary": "Récupère le profil de l’utilisateur connecté",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Données utilisateur" },
+          "401": { "description": "Non autorisé" }
+        }
+      }
+    },
+    "/profiles": {
+      "get": {
+        "summary": "Liste des profils",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "OK" },
+          "401": { "description": "Non autorisé" }
+        }
+      }
+    },
+    "/sessions": {
+      "get": {
+        "summary": "Liste des sessions mentorales",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "OK" },
+          "401": { "description": "Non autorisé" }
+        }
+      },
+      "post": {
+        "summary": "Créer une session mentorale",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "mentorId": { "type": "string" },
+                  "menteeId": { "type": "string" },
+                  "date": { "type": "string", "format": "date-time" },
+                  "status": { "type": "string" }
+                },
+                "required": ["mentorId", "menteeId", "date"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Session créée" },
+          "400": { "description": "Erreur de validation" }
+        }
+      }
+    },
+    "/messages": {
+      "post": {
+        "summary": "Envoyer un message privé",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "conversationId": { "type": "string" },
+                  "senderId": { "type": "string" },
+                  "content": { "type": "string" }
+                },
+                "required": ["conversationId", "senderId", "content"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Message envoyé" },
+          "400": { "description": "Erreur de validation" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
+
+
+

@@ -1,0 +1,40 @@
+@startuml RoutesAPI
+
+skinparam packageStyle rectangle
+
+package "API /auth" {
+  [POST /api/auth/register]
+  [POST /api/auth/login]
+  [GET  /api/auth/me]
+}
+
+package "API /profiles" {
+  [GET /api/profiles]
+  [GET /api/profiles/:id]
+  [PUT /api/profiles/:id]
+}
+
+package "API /mentorships" {
+  [GET /api/mentorships]
+  [POST /api/mentorships]
+  [PUT /api/mentorships/:id]
+  [DELETE /api/mentorships/:id]
+}
+
+package "API /experiences" {
+  [GET /api/experiences]
+  [POST /api/experiences]
+}
+
+package "API /skills" {
+  [GET /api/skills]
+  [POST /api/skills]
+}
+
+package "API /reports" {
+  [POST /api/reports]
+  [GET /api/reports]
+  [PUT /api/reports/:id]
+}
+
+@enduml

@@ -1,0 +1,17 @@
+@startuml SequenceRegister
+
+actor Utilisateur
+participant "Frontend React" as FE
+participant "Backend Express" as BE
+participant "MongoDB" as DB
+
+Utilisateur -> FE : Remplit le formulaire
+FE -> BE : POST /api/auth/register
+BE -> DB : Vérifie si email existe
+DB --> BE : email non trouvé
+BE -> DB : Crée utilisateur
+BE -> DB : Crée profil vide
+DB --> BE : OK
+BE --> FE : 201 Created + token
+
+@enduml

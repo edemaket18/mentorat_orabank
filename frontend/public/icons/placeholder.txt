@@ -1,0 +1,6 @@
+Please replace these placeholders with real app icons.
+Add 192x192 and 512x512 PNG files at:
+- /public/icons/icon-192.png
+- /public/icons/icon-512.png
+
+For now you can copy any placeholder PNGs named accordingly.

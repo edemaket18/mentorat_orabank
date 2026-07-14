@@ -1,0 +1,15 @@
+@startuml SequenceMe
+
+actor Utilisateur
+participant FE
+participant BE
+participant DB
+
+Utilisateur -> FE : Navigue vers /profile
+FE -> BE : GET /api/auth/me (avec token)
+BE -> BE : Vérifie token
+BE -> DB : findById(user._id)
+DB --> BE : User sans password
+BE --> FE : Données utilisateur
+
+@enduml

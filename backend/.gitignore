@@ -1,0 +1,15 @@
+# Ignorer .env
+.env
+
+# Ignorer les dossiers de build et les dépendances
+/node_modules
+/dist
+/build
+
+# Ignorer les logs
+*.log
+logs
+npm-debug.log*
+
+# Ignorer les fichiers temporaires
+.DS_Store
