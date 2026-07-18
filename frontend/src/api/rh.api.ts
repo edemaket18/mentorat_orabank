@@ -1,11 +1,8 @@
-import axios from 'axios';
-import * as React from "react";
-import { ReactNode } from 'react';
+ import { ReactNode } from 'react';
+import httpClient from './httpClient';
 
-const api = axios.create({
-  baseURL: '/api',
-  withCredentials: true,
-});
+// Réutilise le client centralisé : bonne baseURL (env) + token Bearer attaché automatiquement.
+const api = httpClient;
 
 export interface User {
   specialty: string;
@@ -125,4 +122,16 @@ export const getStagiairesForEvaluation = async (): Promise<User[]> => {
 
 export const submitEvaluation = async (id: string, note: number): Promise<void> => {
   await api.post(`/rh/evaluations/${id}`, { note });
+};
+
+export interface RHStatistics {
+  interns: number;
+  mentors: number;
+  activeMentorships: number;
+  completedReports: number;
+}
+
+export const getRHStatistics = async (): Promise<RHStatistics> => {
+  const res = await api.get<RHStatistics>('/rh/statistics');
+  return res.data;
 };

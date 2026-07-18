@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+ import mongoose, { Document, Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 // Interface TypeScript pour le modèle User
@@ -7,8 +7,14 @@ export interface IUser extends Document {
   lastName: string;
   email: string;
   password: string;
-  role: 'mentor' | 'stagiaire' | 'admin';
+  role: 'mentor' | 'stagiaire' | 'admin' | 'rh';
   bio?: string;
+  department?: string;
+  university?: string;
+  preferences?: {
+    language?: string;
+    notificationsEnabled?: boolean;
+  };
   avatar?: string;
   avatarUrl?: string;
   birthDate?: string;
@@ -70,7 +76,7 @@ const UserSchema = new Schema<IUser>(
 
     role: {
       type: String,
-      enum: ['mentor', 'stagiaire', 'admin'],
+      enum: ['mentor', 'stagiaire', 'admin', 'rh'],
       default: 'stagiaire',
     },
     isActive: { type: Boolean, default: true },
@@ -99,6 +105,12 @@ const UserSchema = new Schema<IUser>(
     showCv: { type: Boolean, default: true },
     cvUrl: String,
     bio: String,
+    department: String,
+    university: String,
+    preferences: {
+      language: { type: String, default: 'fr' },
+      notificationsEnabled: { type: Boolean, default: true },
+    },
 
     mentorships: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Mentorship' }],
     messages: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Message' }],

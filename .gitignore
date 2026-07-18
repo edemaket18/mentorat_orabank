@@ -1,4 +1,4 @@
-# Dependencies
+ # Dependencies
 node_modules/
 **/node_modules/
 
@@ -9,8 +9,12 @@ out/
 coverage/
 
 # Environment variables
+# .env.development et .env.production (frontend) ne contiennent aucun secret
+# (juste l'URL de l'API) : ils doivent être committés pour que l'équipe et
+# les builds CI/mobile aient une config par défaut cohérente.
 .env
-.env.*
+.env.local
+.env.*.local
 !.env.example
 
 # IDE specific files
@@ -52,3 +56,4 @@ frontend/.env.production.local
 
 # Backend specific
 backend/dist/
+backend/.env

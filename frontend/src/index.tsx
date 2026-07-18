@@ -1,6 +1,7 @@
-import React from 'react';
+ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import  App from './App';
+import './styles/tailwind.css';
 import './styles/mobile.css';
 //import { Provider } from 'react-redux'
 //import { Normalize } from 'styled-normalize'

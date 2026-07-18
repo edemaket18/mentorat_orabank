@@ -1,4 +1,4 @@
-// src/pages/admin/AdminRoles.tsx
+ // src/pages/admin/AdminRoles.tsx
 import React, { useEffect, useState } from 'react';
 import { getAllUsers, updateUserRole } from '@api/admin.api';
 import { User } from '@api/admin.api';
@@ -12,7 +12,7 @@ import {
 import { Card, CardContent } from '@components/layout/Card';
 import { response } from 'express';
 
-const roles = ['admin', 'mentor', 'intern'];
+const roles = ['admin', 'mentor', 'intern', 'rh'];
 
 const AdminRoles: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);

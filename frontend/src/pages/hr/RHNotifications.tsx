@@ -1,43 +1,22 @@
-import React, { useEffect, useState } from 'react';
-
-interface Notification {
-  id: string;
-  title: string;
-  description: string;
-  date: string;
-  read: boolean;
-}
-
-const mockNotifications: Notification[] = [
-  {
-    id: '1',
-    title: 'Rapport de stage soumis',
-    description: 'Le stagiaire Emmanuel a soumis son rapport.',
-    date: '2025-07-16',
-    read: false,
-  },
-  {
-    id: '2',
-    title: 'Nouveau mentor assigné',
-    description: 'Mentor Julie a été assignée à un stagiaire.',
-    date: '2025-07-15',
-    read: true,
-  },
-];
+ import React, { useEffect, useState } from 'react';
+import { getMyNotifications, markNotificationAsRead, Notification } from '@api/notification.api';
 
 const RHNotifications: React.FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
-    setNotifications(mockNotifications);
+    getMyNotifications().then(setNotifications).catch(console.error);
   }, []);
 
-  const markAsRead = (id: string) => {
-    setNotifications((prev) =>
-      prev.map((notif) =>
-        notif.id === id ? { ...notif, read: true } : notif
-      )
-    );
+  const markAsRead = async (id: string) => {
+    try {
+      await markNotificationAsRead(id);
+      setNotifications((prev) =>
+        prev.map((notif) => (notif._id === id ? { ...notif, read: true } : notif))
+      );
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -50,7 +29,7 @@ const RHNotifications: React.FC = () => {
         <ul className="space-y-4">
           {notifications.map((notif) => (
             <li
-              key={notif.id}
+              key={notif._id}
               className={`p-4 rounded shadow-sm ${
                 notif.read ? 'bg-gray-100' : 'bg-blue-50'
               }`}
@@ -58,12 +37,12 @@ const RHNotifications: React.FC = () => {
               <div className="flex justify-between items-center">
                 <div>
                   <h3 className="font-semibold">{notif.title}</h3>
-                  <p className="text-gray-700">{notif.description}</p>
-                  <p className="text-sm text-gray-400">{notif.date}</p>
+                  <p className="text-gray-700">{notif.message}</p>
+                  <p className="text-sm text-gray-400">{new Date(notif.createdAt).toLocaleDateString()}</p>
                 </div>
                 {!notif.read && (
                   <button
-                    onClick={() => markAsRead(notif.id)}
+                    onClick={() => markAsRead(notif._id)}
                     className="text-blue-600 text-sm underline"
                   >
                     Marquer comme lu

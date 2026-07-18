@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+ import React, { useEffect, useState } from 'react';
+import httpClient from '@api/httpClient';
 
 interface Notification {
   _id: string;
@@ -14,7 +14,7 @@ const InternNotifications: React.FC = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const res = await axios.get<Notification[]>('/api/intern/notifications');
+        const res = await httpClient.get<Notification[]>('/intern/notifications');
         setNotifications(res.data);
       } catch (error) {
         console.error('Erreur de chargement des notifications :', error);

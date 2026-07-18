@@ -1,7 +1,6 @@
- 
-import axios from 'axios';
+import httpClient from './httpClient';
 
-const API_URL = '/api/intern';
+const API_URL = '/intern';
  
  
  export interface Intern {
@@ -19,4 +18,3 @@ const API_URL = '/api/intern';
     monthlyRegistrations: { month: string; count: number }[];
   };
 }
-

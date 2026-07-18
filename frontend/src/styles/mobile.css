@@ -443,7 +443,7 @@ input {
   align-items: center;
   gap: 1rem;
   background: white;
-  padding: 0.85rem 1.25rem;
+  padding: calc(0.85rem + env(safe-area-inset-top)) 1.25rem 0.85rem;
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
 }
 
@@ -583,6 +583,8 @@ input {
     min-height: 100vh;
     width: 260px;
     box-shadow: 0 20px 45px rgba(15, 23, 42, 0.15);
+    padding-top: calc(1.25rem + env(safe-area-inset-top));
+    padding-left: calc(0.75rem + env(safe-area-inset-left));
   }
 
   .app-sidebar-overlay {

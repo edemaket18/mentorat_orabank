@@ -1,23 +1,15 @@
-import React from 'react';
+ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/layout/Card';
 import { MessageCircle } from 'lucide-react';
-
-const feedbacks = [
-  {
-    id: '1',
-    user: 'Koffi E.',
-    content: 'Plateforme très utile pour le suivi de stage.',
-    date: '2025-07-16',
-  },
-  {
-    id: '2',
-    user: 'Ama A.',
-    content: 'Interface claire et facile à utiliser.',
-    date: '2025-07-15',
-  },
-];
+import { getAllFeedback, Feedback } from '@api/feedback.api';
 
 const AdminFeedback: React.FC = () => {
+  const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
+
+  useEffect(() => {
+    getAllFeedback().then(setFeedbacks).catch(console.error);
+  }, []);
+
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <Card>
@@ -26,10 +18,10 @@ const AdminFeedback: React.FC = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           {feedbacks.map((fb) => (
-            <div key={fb.id} className="border rounded-md p-4">
-              <p className="font-semibold">{fb.user}</p>
-              <p className="text-gray-700">{fb.content}</p>
-              <p className="text-sm text-gray-500">{fb.date}</p>
+            <div key={fb._id} className="border rounded-md p-4">
+              <p className="font-semibold">{fb.author?.name ?? 'Utilisateur'}</p>
+              <p className="text-gray-700">{fb.message}</p>
+              <p className="text-sm text-gray-500">{new Date(fb.createdAt).toLocaleDateString()}</p>
             </div>
           ))}
           {feedbacks.length === 0 && (

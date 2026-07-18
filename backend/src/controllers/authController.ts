@@ -1,4 +1,3 @@
- 
  import { Request, Response, NextFunction } from 'express';
 import User from '../models/User';
 import Profile from '../models/Profile';
@@ -139,8 +138,8 @@ export const getMe = async (req: Request, res: Response, next: NextFunction) => 
 // ➤ Mettre à jour le Profil
 export const updateProfile = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
-    const user = await User.findById(req.user.id);
+    const { firstName, lastName, email, password, phone, bio, department, university, preferences } = req.body;
+    const user = await User.findById(req.users?._id);
 
     if (!user) {
       return res.status(404).json({ message: 'Utilisateur non trouvé' });
@@ -149,6 +148,13 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
     user.firstName = firstName || user.firstName;
     user.lastName = lastName || user.lastName;
     user.email = email || user.email;
+    if (phone !== undefined) user.phone = phone;
+    if (bio !== undefined) user.bio = bio;
+    if (department !== undefined) (user as any).department = department;
+    if (university !== undefined) (user as any).university = university;
+    if (preferences !== undefined) {
+      (user as any).preferences = { ...(user as any).preferences, ...preferences };
+    }
     if (password) user.password = await bcrypt.hash(password, 10);
 
     const updatedUser = await user.save();
@@ -159,6 +165,11 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
       lastName: updatedUser.lastName,
       email: updatedUser.email,
       role: updatedUser.role,
+      phone: updatedUser.phone,
+      bio: updatedUser.bio,
+      department: (updatedUser as any).department,
+      university: (updatedUser as any).university,
+      preferences: (updatedUser as any).preferences,
     });
   } catch (error) {
     next(error);

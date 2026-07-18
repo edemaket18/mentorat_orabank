@@ -1,4 +1,4 @@
-import axios from 'axios';
+ import axios from 'axios';
 
 const API_URL = '/api/admin';
 const API = axios.create({
@@ -71,5 +71,5 @@ export const getSettings = async (): Promise<any> => {
 };
 
 export const updateSettings = async (settings: any): Promise<void> => {
-  await axios.put(`${API_URL}/settings`, settings);
+  await API.put(`${API_URL}/settings`, settings);
 };

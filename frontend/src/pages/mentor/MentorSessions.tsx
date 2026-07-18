@@ -1,11 +1,11 @@
-import React from 'react';
+ import React from 'react';
 
 const MentorSessions = () => {
   return (
     <div className="p-6">
       <h1 className="text-xl font-bold mb-4">Mes Sessions de Mentorat</h1>
 
-      <table className="w-full text-left border-collapse">
+      <div className="overflow-x-auto"><table className="w-full text-left border-collapse min-w-[560px]">
         <thead>
           <tr>
             <th className="p-2 border-b">Stagiaire</th>
@@ -25,7 +25,7 @@ const MentorSessions = () => {
             <td className="p-2 text-gray-500">Terminée</td>
           </tr>
         </tbody>
-      </table>
+      </table></div>
     </div>
   );
 };

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+ import React, { useEffect, useState } from 'react';
+import httpClient from '@api/httpClient';
 
 interface Candidate {
   id: string;
@@ -15,7 +15,7 @@ const InternCandidates = () => {
   useEffect(() => {
     const fetchCandidates = async () => {
       try {
-        const res = await axios.get('/api/interns/candidates');
+        const res = await httpClient.get('/interns/candidates');
         setCandidates(res.data);
       } catch (error) {
         console.error('Erreur lors du chargement des candidats', error);

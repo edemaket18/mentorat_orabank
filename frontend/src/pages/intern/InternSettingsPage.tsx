@@ -1,15 +1,36 @@
-import React, { useState } from 'react';
+ import React, { useEffect, useState } from 'react';
+import { getCurrentUser, updateMyProfile, changePassword } from '@api/auth.api';
 
-const InternSettingsPage = () => {
-  const [email, setEmail] = useState('edem@example.com');
-  const [password, setPassword] = useState('');
-  const [success, setSuccess] = useState(false);
+const InternSettingsPage: React.FC = () => {
+  const [email, setEmail] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [success, setSuccess] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
-  const handleUpdate = (e: React.FormEvent) => {
+  useEffect(() => {
+    getCurrentUser().then((u) => setEmail(u.email)).catch(console.error);
+  }, []);
+
+  const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Envoyer une requête à l'API pour mettre à jour les infos
-    console.log('Email:', email, 'Password:', password);
-    setSuccess(true);
+    setSaving(true);
+    setSuccess(null);
+    setError(null);
+    try {
+      await updateMyProfile({ email });
+      if (currentPassword && newPassword) {
+        await changePassword(currentPassword, newPassword);
+        setCurrentPassword('');
+        setNewPassword('');
+      }
+      setSuccess('Paramètres mis à jour avec succès.');
+    } catch (err: any) {
+      setError(err?.response?.data?.message ?? 'Une erreur est survenue.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -27,19 +48,30 @@ const InternSettingsPage = () => {
         </div>
 
         <div>
+          <label className="block text-sm font-medium">Mot de passe actuel</label>
+          <input
+            type="password"
+            className="w-full border rounded p-2"
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+          />
+        </div>
+
+        <div>
           <label className="block text-sm font-medium">Nouveau mot de passe</label>
           <input
             type="password"
             className="w-full border rounded p-2"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
           />
         </div>
 
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
-          Enregistrer
+        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50" disabled={saving}>
+          {saving ? 'Enregistrement...' : 'Enregistrer'}
         </button>
-        {success && <p className="text-green-600 mt-2">Paramètres mis à jour avec succès.</p>}
+        {success && <p className="text-green-600 mt-2">{success}</p>}
+        {error && <p className="text-red-600 mt-2">{error}</p>}
       </form>
     </div>
   );

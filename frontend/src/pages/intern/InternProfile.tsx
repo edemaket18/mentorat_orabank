@@ -1,41 +1,74 @@
- import React, { useState } from 'react';
+ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/layout/Card';
 import { Input } from '@components/layout/Input';
 import { Button } from '@components/common/Button';
 import { toast } from 'sonner';
+import { getCurrentUser, updateMyProfile } from '@api/auth.api';
 
-type Profile = {
+type ProfileForm = {
   fullName: string;
   email: string;
   department: string;
   university: string;
   phone: string;
-  
-
 };
 
- 
-
-const defaultProfile: Profile = {
-  fullName: 'Edem Aket',
-  email: 'edem.aket@example.com',
-  department: 'Informatique',
-  university: 'Université de Lomé',
-  phone: '+228 90 00 00 00',
+const emptyProfile: ProfileForm = {
+  fullName: '',
+  email: '',
+  department: '',
+  university: '',
+  phone: '',
 };
 
 const InternProfile: React.FC = () => {
-  const [profile, setProfile] = useState<Profile>(defaultProfile);
+  const [profile, setProfile] = useState<ProfileForm>(emptyProfile);
   const [isEditing, setIsEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    getCurrentUser()
+      .then((u) => {
+        setProfile({
+          fullName: u.name,
+          email: u.email,
+          department: u.department ?? '',
+          university: u.university ?? '',
+          phone: u.phone ?? '',
+        });
+      })
+      .catch(console.error);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
   };
 
-  const handleSave = () => {
-    setIsEditing(false);
-    toast.success('Profil mis à jour avec succès.');
-    // ici : requête API si backend connecté
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const [firstName, ...rest] = profile.fullName.trim().split(' ');
+      const updated = await updateMyProfile({
+        firstName,
+        lastName: rest.join(' '),
+        department: profile.department,
+        university: profile.university,
+        phone: profile.phone,
+      });
+      setProfile({
+        fullName: updated.name,
+        email: updated.email,
+        department: updated.department ?? '',
+        university: updated.university ?? '',
+        phone: updated.phone ?? '',
+      });
+      setIsEditing(false);
+      toast.success('Profil mis à jour avec succès.');
+    } catch (error) {
+      toast.error('Erreur lors de la mise à jour du profil.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -91,7 +124,9 @@ const InternProfile: React.FC = () => {
                 <Button variant="outline" onClick={() => setIsEditing(false)}>
                   Annuler
                 </Button>
-                <Button onClick={handleSave}>Enregistrer</Button>
+                <Button onClick={handleSave} disabled={saving}>
+                  {saving ? 'Enregistrement...' : 'Enregistrer'}
+                </Button>
               </>
             )}
           </div>
@@ -102,4 +137,3 @@ const InternProfile: React.FC = () => {
 };
 
 export default InternProfile;
-

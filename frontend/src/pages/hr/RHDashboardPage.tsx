@@ -3,7 +3,7 @@ import { Card, CardContent } from '@components/layout/Card';
 import { StatsChart } from '@features/chat/StatsChart';
 import { Badge } from '@components/layout/Badge';
 import { Separator } from '@components/layout/separator';
-import axios from 'axios';
+import httpClient from '@api/httpClient';
 import { Loader } from '@components/layout/Loader';   
 
 interface Stats {
@@ -29,7 +29,7 @@ export const RhDashboardPage: React.FC = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await axios.get('/api/rh/stats');
+        const response = await httpClient.get('/rh/stats');
         setStats(response.data);
       } catch (error) {
         console.error('Erreur lors du chargement des statistiques RH', error);

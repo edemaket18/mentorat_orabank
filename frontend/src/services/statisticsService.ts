@@ -1,7 +1,7 @@
-
-import { getMentorStats, getMentorReview } from '../api/mentor.api';
+ import { getMentorStats, getMentorReview } from '../api/mentor.api';
 import { getAllInterns, getAllMentors } from '../api/rh.api';
 import { getMentorships, getAllMentorships } from '../api/mentorship.api';
+import httpClient from '../api/httpClient';
 
 export const statisticsService = {
 	/**
@@ -51,11 +51,6 @@ export const statisticsService = {
  * Récupérer les statistiques d'un stagiaire
  */
 export const getInternStatistics = async () => {
-	return {
-		totalReports: 0,
-		totalMentorships: 0,
-		totalHours: 0,
-		evaluations: [],
-	};
+	const response = await httpClient.get('/intern/statistics');
+	return response.data;
 };
- 

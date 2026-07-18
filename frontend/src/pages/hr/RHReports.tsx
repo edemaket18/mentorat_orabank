@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+ import React, { useEffect, useState } from 'react';
 import { getAllReports } from '@api/report.api';
 import { Report } from '@api/report.api';
 
@@ -12,7 +12,7 @@ const RHReports = () => {
   return (
     <div className="p-6">
       <h2 className="text-2xl font-semibold mb-4">Rapports de Stage</h2>
-      <table className="w-full text-left">
+      <div className="overflow-x-auto"><table className="w-full text-left min-w-[560px]">
         <thead>
           <tr className="border-b">
             <th>Stagiaire</th>
@@ -31,7 +31,7 @@ const RHReports = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table></div>
     </div>
   );
 };

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+ import React, { useState, useEffect } from 'react';
+import httpClient from '@api/httpClient';
 
 interface Departure {
   id: string;
@@ -14,7 +14,7 @@ const InternDepartures = () => {
   useEffect(() => {
     const fetchDepartures = async () => {
       try {
-        const res = await axios.get('/api/interns/departures');
+        const res = await httpClient.get('/interns/departures');
         setDepartures(res.data);
       } catch (err) {
         console.error('Erreur chargement départs', err);
@@ -26,7 +26,7 @@ const InternDepartures = () => {
   return (
     <div className="p-6">
       <h2 className="text-xl font-semibold mb-4">Mes départs de stage</h2>
-      <table className="w-full border-collapse">
+      <div className="overflow-x-auto"><table className="w-full border-collapse min-w-[560px]">
         <thead>
           <tr className="bg-gray-100 text-left">
             <th className="p-2">Date de fin</th>
@@ -43,7 +43,7 @@ const InternDepartures = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table></div>
     </div>
   );
 };

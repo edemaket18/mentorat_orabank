@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+ import React, { useEffect, useState } from 'react';
+import httpClient from '@api/httpClient';
 
 interface Mentorship {
   _id: string;
@@ -10,7 +10,7 @@ interface Mentorship {
   feedback?: string;
 }
 
-const API_URL = '/api/intern/mentorships';  
+const API_URL = '/intern/mentorships';  
 
 export const InternMentorships: React.FC = () => {
   const [mentorships, setMentorships] = useState<Mentorship[]>([]);
@@ -18,7 +18,7 @@ export const InternMentorships: React.FC = () => {
 
   const fetchMentorships = async () => {
     try {
-      const response = await axios.get<Mentorship[]>(API_URL);
+      const response = await httpClient.get<Mentorship[]>(API_URL);
       setMentorships(response.data);
     } catch (error) {
       console.error('Erreur lors de la récupération des suivis :', error);

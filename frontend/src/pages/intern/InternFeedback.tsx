@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+ import React, { useEffect, useState } from 'react';
+import httpClient from '@api/httpClient';
 
 interface Feedback {
   _id: string;
@@ -14,7 +14,7 @@ export const InternFeedback: React.FC = () => {
   useEffect(() => {
     const fetchFeedbacks = async () => {
       try {
-        const res = await axios.get<Feedback[]>('/api/intern/feedback');
+        const res = await httpClient.get<Feedback[]>('/intern/feedback');
         setFeedbacks(res.data);
       } catch (error) {
         console.error('Erreur lors du chargement des retours :', error);

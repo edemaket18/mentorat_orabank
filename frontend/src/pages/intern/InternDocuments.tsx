@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+ import React, { useState, useEffect } from 'react';
+import httpClient from '@api/httpClient';
 
 interface DocumentFile {
   _id: string;
@@ -18,7 +18,7 @@ const InternDocuments: React.FC = () => {
     formData.append('file', selectedFile);
 
     try {
-      await axios.post('/api/intern/documents', formData, {
+      await httpClient.post('/intern/documents', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       setSelectedFile(null);
@@ -30,7 +30,7 @@ const InternDocuments: React.FC = () => {
 
   const fetchDocuments = async () => {
     try {
-      const res = await axios.get<DocumentFile[]>('/api/intern/documents');
+      const res = await httpClient.get<DocumentFile[]>('/intern/documents');
       setDocuments(res.data);
     } catch (error) {
       console.error('Erreur de récupération des documents :', error);

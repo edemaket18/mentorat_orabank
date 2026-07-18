@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+ import React, { useEffect, useState } from 'react';
+import httpClient from '@api/httpClient';
 
 interface Evaluation {
   _id: string;
@@ -15,7 +15,7 @@ const InternEvaluations: React.FC = () => {
   useEffect(() => {
     const fetchEvaluations = async () => {
       try {
-        const res = await axios.get<Evaluation[]>('/api/intern/evaluations');
+        const res = await httpClient.get<Evaluation[]>('/intern/evaluations');
         setEvaluations(res.data);
       } catch (error) {
         console.error('Erreur lors du chargement des évaluations :', error);

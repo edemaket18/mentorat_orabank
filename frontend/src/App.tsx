@@ -79,7 +79,6 @@ import InternFeedback from '@pages/intern/InternFeedback';
 import InternNotifications from '@pages/intern/InternNotifications';
 import InternStatisticsPage from '@pages/intern/InternStatisticsPage';
 import InternSettingsPage from '@pages/intern/InternSettingsPage';
-import { Evaluation } from 'api/matching.api';
 
 function App() {
   return (
@@ -136,13 +135,7 @@ function App() {
             <Route path="/mentor/dashboard" element={<MentorDashboardPage />} />
             <Route path="/mentor/interns" element={<MentorInterns />} />
             <Route path="/mentor/candidates" element={<MentorCandidates />} />
-            <Route path="/mentor/matching" element={<MentorMatching title={''} description={''} placeholder={''} textareaPlaceholder={''} submitButtonText={''} additionalInfo={''} mentors={[]} onMatch={function (mentorId: string): void {
-              throw new Error('Function not implemented.');
-            } } interns={[]} onInternSelect={function (internId: string): void {
-              throw new Error('Function not implemented.');
-            } } evaluations={[]} onEvaluationSubmit={function (evaluation: Evaluation): void {
-              throw new Error('Function not implemented.');
-            } } />} />
+            <Route path="/mentor/matching" element={<MentorMatching />} />
             <Route path="/mentor/mentorships" element={<MentorMentorships />} />
             <Route path="/mentor/sessions" element={<MentorSessions />} />
             <Route path="/mentor/evaluations" element={<MentorEvaluations />} />

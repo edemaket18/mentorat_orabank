@@ -12,6 +12,12 @@ import mentorshipRoutes from './routes/mentorshipRoutes';
 import experienceShareRoutes from './routes/experienceShareRoutes';
 import skillRoutes from './routes/skillRoutes';
 import reportRoutes from './routes/reportRoutes';
+import contractRoutes from './routes/contractRoutes';
+import internRoutes from './routes/internRoutes';
+import notificationRoutes from './routes/notificationRoutes';
+import feedbackRoutes from './routes/feedbackRoutes';
+import rhRoutes from './routes/rhRoutes';
+import mentorRoutes from './routes/mentorRoutes';
 import studentRoutes from './routes/studentRoutes';
 import uploadCvRoutes from './routes/uploadCvRoutes';
 import attestationRoutes from './routes/attestationsRoutes';
@@ -26,7 +32,14 @@ const app: Application = express();
 
 
 const PORT = process.env.PORT || 5001;
-const allowedOrigins = [ process.env.FRONTEND_URL || 'http://localhost:3000', 'http://127.0.0.1:3000' ];
+const allowedOrigins = [
+  process.env.FRONTEND_URL || 'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  // Origines utilisées par le shell mobile Capacitor (Android/iOS)
+  'capacitor://localhost',
+  'https://localhost',
+  'http://localhost',
+];
 
 // DB connection
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/mentorat', {
@@ -73,6 +86,12 @@ app.use('/api/mentorships', mentorshipRoutes);
 app.use('/api/experiences', experienceShareRoutes);
 app.use('/api/skills', skillRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/contracts', contractRoutes);
+app.use('/api/intern', internRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/feedback', feedbackRoutes);
+app.use('/api/rh', rhRoutes);
+app.use('/api/mentors', mentorRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/attestations', attestationRoutes);
 app.use('/api/analytics', analyticsRoutes);
@@ -135,4 +154,3 @@ io.on('connection', (socket) => {
     console.log(`🔴 Socket déconnecté: ${socket.id}`);
   });
 });
- 

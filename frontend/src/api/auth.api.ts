@@ -1,4 +1,4 @@
-import axios from 'axios';
+ import axios from 'axios';
 
 const API = axios.create({
   baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5001/api',
@@ -11,6 +11,14 @@ export interface AuthUser {
   email: string;
   role: string;
   token?: string;
+  phone?: string;
+  bio?: string;
+  department?: string;
+  university?: string;
+  preferences?: {
+    language?: string;
+    notificationsEnabled?: boolean;
+  };
 }
 
 interface ApiAuthUser {
@@ -20,6 +28,11 @@ interface ApiAuthUser {
   lastName?: string;
   email: string;
   role: string;
+  phone?: string;
+  bio?: string;
+  department?: string;
+  university?: string;
+  preferences?: { language?: string; notificationsEnabled?: boolean };
 }
 
 interface AuthResponse {
@@ -31,6 +44,11 @@ interface AuthResponse {
   lastName?: string;
   email?: string;
   role?: string;
+  phone?: string;
+  bio?: string;
+  department?: string;
+  university?: string;
+  preferences?: { language?: string; notificationsEnabled?: boolean };
 }
 
 const TOKEN_STORAGE_KEY = 'authToken';
@@ -72,6 +90,11 @@ const normalizeAuthUser = (data: AuthResponse): AuthUser => {
     email: rawUser.email ?? '',
     role: normalizeRole(rawUser.role),
     token: data.token,
+    phone: rawUser.phone,
+    bio: rawUser.bio,
+    department: rawUser.department,
+    university: rawUser.university,
+    preferences: rawUser.preferences,
   };
 };
 
@@ -116,6 +139,29 @@ export const register = async (name: string, email: string, password: string, ro
 export const getCurrentUser = async (): Promise<AuthUser> => {
   const res = await API.get('/auth/current');
   return normalizeAuthUser(res.data);
+};
+
+export interface UpdateProfilePayload {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  bio?: string;
+  department?: string;
+  university?: string;
+  preferences?: {
+    language?: string;
+    notificationsEnabled?: boolean;
+  };
+}
+
+export const updateMyProfile = async (payload: UpdateProfilePayload): Promise<AuthUser> => {
+  const res = await API.put('/auth/update-profile', payload);
+  return normalizeAuthUser(res.data);
+};
+
+export const changePassword = async (currentPassword: string, newPassword: string): Promise<void> => {
+  await API.post('/auth/change-password', { currentPassword, newPassword });
 };
 
 export const resetPassword = async (token: string, password: string): Promise<void> => {

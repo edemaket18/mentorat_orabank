@@ -1,22 +1,11 @@
-import React, { useEffect, useState } from 'react';
-
-interface Feedback {
-  id: string;
-  sender: string;
-  message: string;
-  date: string;
-}
-
-const mockFeedbacks: Feedback[] = [
-  { id: '1', sender: 'Mentor A', message: 'Le stagiaire progresse bien.', date: '2025-07-15' },
-  { id: '2', sender: 'Stagiaire B', message: 'Besoin d’un suivi plus régulier.', date: '2025-07-14' },
-];
+ import React, { useEffect, useState } from 'react';
+import { getAllFeedback, Feedback } from '@api/feedback.api';
 
 const RHFeedback: React.FC = () => {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
 
   useEffect(() => {
-    setFeedbacks(mockFeedbacks);
+    getAllFeedback().then(setFeedbacks).catch(console.error);
   }, []);
 
   return (
@@ -28,10 +17,10 @@ const RHFeedback: React.FC = () => {
       ) : (
         <ul className="space-y-4">
           {feedbacks.map((fb) => (
-            <li key={fb.id} className="border p-4 rounded shadow-sm bg-white">
-              <p className="font-semibold">{fb.sender}</p>
+            <li key={fb._id} className="border p-4 rounded shadow-sm bg-white">
+              <p className="font-semibold">{fb.author?.name ?? 'Utilisateur'}</p>
               <p className="text-gray-700">{fb.message}</p>
-              <p className="text-sm text-gray-400">{fb.date}</p>
+              <p className="text-sm text-gray-400">{new Date(fb.createdAt).toLocaleDateString()}</p>
             </li>
           ))}
         </ul>

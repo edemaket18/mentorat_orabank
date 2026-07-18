@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+ import React, { useEffect, useState } from 'react';
+import httpClient from '@api/httpClient';
 
 interface Session {
   id: string;
@@ -15,7 +15,7 @@ const InternSessions = () => {
   useEffect(() => {
     const fetchSessions = async () => {
       try {
-        const res = await axios.get('/api/interns/sessions');
+        const res = await httpClient.get('/interns/sessions');
         setSessions(res.data);
       } catch (err) {
         console.error('Erreur lors du chargement des sessions', err);

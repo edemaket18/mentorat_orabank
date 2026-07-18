@@ -1,9 +1,8 @@
-
-import express from 'express';
+ import express from 'express';
 import bcrypt from 'bcryptjs';
 import User from '../models/User'; // modèle mongoose
-import { authMiddleware, protect } from '../middlewares/authMiddleware';
-import { registerUser, loginUser, forgotPassword, resetPassword } from '../controllers/authController'; 
+import { protect } from '../middlewares/authMiddleware';
+import { registerUser, loginUser, forgotPassword, resetPassword, updateProfile } from '../controllers/authController'; 
  import { registerValidator, loginValidator } from '../middlewares/validators/authValidators';
  import { sendEmail } from '../utils/sendEmail';
  import { passwordChangedTemplate } from '../emailTemplates/passwordChanged';
@@ -37,16 +36,18 @@ router.get('/current', protect, async (req, res) => {
   res.json(req.users);
 });
 
- 
-router.post('/change-password', authMiddleware, async (req, res) => {
-  const { userId, currentPassword, newPassword } = req.body;
+router.put('/update-profile', protect, updateProfile);
 
-  if (!userId || !currentPassword || !newPassword) {
+ 
+router.post('/change-password', protect, async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+
+  if (!currentPassword || !newPassword) {
     return res.status(400).json({ message: 'Champs manquants.' });
   }
 
   try {
-    const user = await User.findById(userId);
+    const user = await User.findById(req.users?._id);
     if (!user)
       return res.status(404).json({ message: 'Utilisateur non trouvé.' });
 

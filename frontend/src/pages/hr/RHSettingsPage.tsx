@@ -1,12 +1,30 @@
- import React, { useState } from 'react';
+ import React, { useEffect, useState } from 'react';
+import { getCurrentUser, updateMyProfile } from '@api/auth.api';
 
 const RHSettingsPage: React.FC = () => {
   const [language, setLanguage] = useState('fr');
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
 
-  const handleSave = () => {
-    console.log('Paramètres enregistrés', { language, notificationsEnabled });
-    alert('Paramètres sauvegardés avec succès.');
+  useEffect(() => {
+    getCurrentUser().then((u) => {
+      setLanguage(u.preferences?.language ?? 'fr');
+      setNotificationsEnabled(u.preferences?.notificationsEnabled ?? true);
+    }).catch(console.error);
+  }, []);
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await updateMyProfile({ preferences: { language, notificationsEnabled } });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -38,10 +56,12 @@ const RHSettingsPage: React.FC = () => {
 
       <button
         onClick={handleSave}
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        disabled={saving}
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
       >
-        Enregistrer
+        {saving ? 'Enregistrement...' : 'Enregistrer'}
       </button>
+      {saved && <p className="text-green-600 mt-2">Paramètres sauvegardés avec succès.</p>}
     </div>
   );
 };

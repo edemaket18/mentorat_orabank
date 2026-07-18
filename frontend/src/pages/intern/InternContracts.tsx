@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+ import React, { useEffect, useState } from 'react';
+import httpClient from '@api/httpClient';
 
 interface Contract {
   _id: string;
@@ -15,7 +15,7 @@ export const InternContracts: React.FC = () => {
   useEffect(() => {
     const fetchContracts = async () => {
       try {
-        const res = await axios.get<Contract[]>('/api/intern/contracts');
+        const res = await httpClient.get<Contract[]>('/intern/contracts');
         setContracts(res.data);
       } catch (error) {
         console.error('Erreur lors du chargement des contrats :', error);
@@ -27,7 +27,7 @@ export const InternContracts: React.FC = () => {
   return (
     <div className="p-4">
       <h2 className="text-xl font-semibold mb-4">Mes Contrats</h2>
-      <table className="w-full text-left border">
+      <div className="overflow-x-auto"><table className="w-full text-left border min-w-[560px]">
         <thead>
           <tr className="bg-gray-100">
             <th className="p-2">Stagiaire</th>
@@ -46,7 +46,7 @@ export const InternContracts: React.FC = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table></div>
     </div>
   );
 };
