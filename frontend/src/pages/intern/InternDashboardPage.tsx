@@ -1,60 +1,61 @@
- import React from 'react';
-import MentorCard from '@features/cards/MentorCard';
-import ReportCard from '@features/cards/ReportCard';
+ import React, { useEffect, useState } from 'react';
 import ChatBox from '@features/chat/ChatBox';
 import { Card, CardContent } from '@components/layout/Card';
+import { getInternDashboard, InternDashboardData, getMyMessages, sendMyMessage, ChatMessage } from '@api/intern.api';
 
 const InternDashboard: React.FC = () => {
-  const internInfo = {
-    name: 'Jean Koffi',
-    mentorshipProgress: 75,
-    currentMentor: {
-      name: 'Awa Traoré',
-      expertise: 'Finance',
-      company: 'Orabank Togo',
-      available: true,
-      id: 'mentor123',
-      domain: 'Finance',
-      email: 'awa.traore@orabank.tg',
-      mentorId: 'mentor123',
-      profilePicture: 'https://example.com/mentor.jpg',
-    },
-    lastReport: {
-      title: 'Rapport Mensuel - Juin',
-      status: 'Validé',
-      submittedAt: '2025-07-10',
-    },
+  const [data, setData] = useState<InternDashboardData | null>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
 
+  useEffect(() => {
+    getInternDashboard().then(setData).catch(console.error);
+    getMyMessages().then(setMessages).catch(console.error);
+  }, []);
+
+  const handleSendMessage = async (message: string) => {
+    try {
+      const sent = await sendMyMessage(message);
+      setMessages((prev) => [...prev, sent]);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
     <div className="dashboard-shell dashboard-page">
       <div className="dashboard-heading">
-        <h1 className="text-2xl font-bold">Bienvenue, {internInfo.name} 👋</h1>
+        <h1 className="text-2xl font-bold">Bienvenue{data?.name ? `, ${data.name}` : ''} 👋</h1>
       </div>
 
       <div className="dashboard-grid">
-        <MentorCard
-          mentor={internInfo.currentMentor}
-          name={internInfo.currentMentor.name}
-          expertise={internInfo.currentMentor.expertise}
-          company={internInfo.currentMentor.company}
-          id={internInfo.currentMentor.id}
-          available={internInfo.currentMentor.available}
-          onRequest={function (): void {
-            throw new Error('Function not implemented.');
-          }}
-        />
+        <Card className="dashboard-card">
+          <CardContent className="p-4">
+            <p className="dashboard-card-header">Mon mentor</p>
+            {data?.currentMentor ? (
+              <>
+                <p className="font-semibold mt-2">{data.currentMentor.name}</p>
+                <p className="text-sm text-gray-500">{data.currentMentor.expertise}</p>
+                <p className="text-sm text-gray-500">{data.currentMentor.email}</p>
+              </>
+            ) : (
+              <p className="text-sm text-gray-500 mt-2">Aucun mentor assigné pour le moment.</p>
+            )}
+          </CardContent>
+        </Card>
 
-        <ReportCard
-          report={internInfo.lastReport}
-          title={''}
-          status={'en attente'}
-          createdAt={''}
-          onView={function (): void {
-            throw new Error('Function not implemented.');
-          }}
-        />
+        <Card className="dashboard-card">
+          <CardContent className="p-4">
+            <p className="dashboard-card-header">Dernier rapport</p>
+            {data?.lastReport ? (
+              <>
+                <p className="font-semibold mt-2">{data.lastReport.title}</p>
+                <p className="text-sm text-gray-500">{data.lastReport.status}</p>
+              </>
+            ) : (
+              <p className="text-sm text-gray-500 mt-2">Aucun rapport soumis pour le moment.</p>
+            )}
+          </CardContent>
+        </Card>
 
         <Card className="dashboard-card">
           <CardContent className="p-4">
@@ -62,9 +63,9 @@ const InternDashboard: React.FC = () => {
             <div className="mt-2 w-full bg-gray-200 rounded-full h-4">
               <div
                 className="bg-green-500 h-4 rounded-full text-xs text-white text-center"
-                style={{ width: `${internInfo.mentorshipProgress}%` }}
+                style={{ width: `${data?.mentorshipProgress ?? 0}%` }}
               >
-                {internInfo.mentorshipProgress}%
+                {data?.mentorshipProgress ?? 0}%
               </div>
             </div>
           </CardContent>
@@ -73,13 +74,7 @@ const InternDashboard: React.FC = () => {
 
       <div className="dashboard-section">
         <h2 className="text-lg font-semibold mb-2">Messagerie avec votre mentor</h2>
-        <ChatBox
-          mentorId="mentor123"
-          messages={[]}
-          onSendMessage={function (message: string): void {
-            throw new Error('Function not implemented.');
-          }}
-        />
+        <ChatBox messages={messages} onSendMessage={handleSendMessage} />
       </div>
     </div>
   );

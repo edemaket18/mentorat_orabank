@@ -1,31 +1,27 @@
- import React, { useState } from 'react';
-import   MentorCard   from '@features/cards/MentorCard';
+ import React, { useEffect, useState } from 'react';
+import MentorCard from '@features/cards/MentorCard';
 import { toast } from 'react-hot-toast';
 import { Card, CardHeader, CardTitle, CardContent } from '@components/layout/Card';
-
-type Mentor = {
-  id: string;
-  name: string;
-  expertise: string;
-  company: string;
-  available: boolean;
-};
-
-const mockMentors: Mentor[] = [
-  { id: 'm1', name: 'Awa Traoré', expertise: 'Finance', company: 'Orabank', available: true },
-  { id: 'm2', name: 'Kossi Adadji', expertise: 'IT', company: 'Orabank', available: false },
-  { id: 'm3', name: 'Sandra Gbadoé', expertise: 'RH', company: 'Orabank', available: true },
-];
+import { getMentorsForMatching, requestMentor, MatchingMentor } from '@api/intern.api';
 
 const InternMatching: React.FC = () => {
-  const [mentors, setMentors] = useState<Mentor[]>(mockMentors);
-  const [requestedIds, setRequestedIds] = useState<string[]>([]);
+  const [mentors, setMentors] = useState<MatchingMentor[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleRequest = (mentorId: string) => {
-    setRequestedIds((prev) => [...prev, mentorId]);
-    toast.success('Demande de mentorat envoyée avec succès !');
-    // Ici, on simule une API call
-    // await sendMatchingRequest({ mentorId, internId });
+  const load = () => {
+    getMentorsForMatching().then(setMentors).catch(console.error).finally(() => setLoading(false));
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const handleRequest = async (mentorId: string) => {
+    try {
+      await requestMentor(mentorId);
+      toast.success('Demande de mentorat envoyée avec succès !');
+      load();
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message ?? "Erreur lors de l'envoi de la demande.");
+    }
   };
 
   return (
@@ -35,14 +31,26 @@ const InternMatching: React.FC = () => {
           <CardTitle>Matching avec un mentor</CardTitle>
         </CardHeader>
         <CardContent className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {mentors.map((mentor) => (
-            <MentorCard
-              key={ mentor.id }
-              mentor={ mentor }
-              onRequest={ () => handleRequest(mentor.id) }
-              disabled={ !mentor.available || requestedIds.includes(mentor.id) }
-              requested={ requestedIds.includes(mentor.id) } id={ '' } name={ '' } expertise={ '' } company={ '' } available={ false }            />
-          ))}
+          {loading ? (
+            <p className="text-gray-500">Chargement...</p>
+          ) : mentors.length === 0 ? (
+            <p className="text-center text-gray-500 col-span-full">Aucun mentor disponible pour le moment.</p>
+          ) : (
+            mentors.map((mentor) => (
+              <MentorCard
+                key={mentor.id}
+                mentor={mentor}
+                id={mentor.id}
+                name={mentor.name}
+                expertise={mentor.expertise}
+                company={mentor.company}
+                available={mentor.available}
+                onRequest={() => handleRequest(mentor.id)}
+                disabled={!mentor.available || mentor.requested}
+                requested={mentor.requested}
+              />
+            ))
+          )}
         </CardContent>
       </Card>
     </div>

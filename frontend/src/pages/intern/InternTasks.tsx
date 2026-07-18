@@ -1,38 +1,25 @@
-import React, { useState } from 'react';
+ import React, { useEffect, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@components/layout/Card';
 import { Checkbox } from '@components/layout/Checkbox';
-import { Button } from '@components/common/Button';
 import { toast } from 'sonner';
-
-interface Task {
-  id: string;
-  title: string;
-  completed: boolean;
-  assignedDate: string;
-}
+import { getMyTasks, toggleTask, InternTask } from '@api/intern.api';
 
 const InternTasks: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      id: '1',
-      title: 'Préparer le rapport hebdomadaire',
-      completed: false,
-      assignedDate: '2025-07-15',
-    },
-    {
-      id: '2',
-      title: 'Participer à la réunion de suivi',
-      completed: true,
-      assignedDate: '2025-07-14',
-    },
-  ]);
+  const [tasks, setTasks] = useState<InternTask[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const toggleTask = (id: string) => {
-    const updated = tasks.map((task) =>
-      task.id === id ? { ...task, completed: !task.completed } : task
-    );
-    setTasks(updated);
-    toast.success('Tâche mise à jour');
+  useEffect(() => {
+    getMyTasks().then(setTasks).catch(console.error).finally(() => setLoading(false));
+  }, []);
+
+  const handleToggle = async (id: string) => {
+    try {
+      const updated = await toggleTask(id);
+      setTasks((prev) => prev.map((t) => (t._id === id ? updated : t)));
+      toast.success('Tâche mise à jour');
+    } catch (error) {
+      toast.error('Erreur lors de la mise à jour de la tâche');
+    }
   };
 
   return (
@@ -42,23 +29,31 @@ const InternTasks: React.FC = () => {
           <CardTitle>Mes tâches</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {tasks.map((task) => (
-            <div
-              key={task.id}
-              className="flex items-center justify-between border rounded-md p-4"
-            >
-              <div>
-                <h3 className={`font-medium ${task.completed ? 'line-through text-muted-foreground' : ''}`}>
-                  {task.title}
-                </h3>
-                <p className="text-sm text-gray-500">Attribuée le {task.assignedDate}</p>
-              </div>
-              <Checkbox checked={task.completed} onCheckedChange={() => toggleTask(task.id)} />
-            </div>
-          ))}
+          {loading ? (
+            <p className="text-gray-500">Chargement...</p>
+          ) : (
+            <>
+              {tasks.map((task) => (
+                <div
+                  key={task._id}
+                  className="flex items-center justify-between border rounded-md p-4"
+                >
+                  <div>
+                    <h3 className={`font-medium ${task.completed ? 'line-through text-muted-foreground' : ''}`}>
+                      {task.title}
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      Attribuée le {new Date(task.assignedDate).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <Checkbox checked={task.completed} onCheckedChange={() => handleToggle(task._id)} />
+                </div>
+              ))}
 
-          {tasks.length === 0 && (
-            <p className="text-sm text-muted-foreground text-center">Aucune tâche attribuée pour le moment.</p>
+              {tasks.length === 0 && (
+                <p className="text-sm text-muted-foreground text-center">Aucune tâche attribuée pour le moment.</p>
+              )}
+            </>
           )}
         </CardContent>
       </Card>
