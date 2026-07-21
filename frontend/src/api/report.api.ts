@@ -1,77 +1,58 @@
- import httpClient from './httpClient';
+import httpClient from './httpClient';
 
-const API_URL = '/reports';
-
+// Rapports de stage (à ne pas confondre avec les signalements de messages,
+// gérés séparément dans moderationReport.api.ts). Ce fichier correspond au
+// vrai modèle Report du backend (mentés à /api/reports).
 export interface Report {
-  mentor: any;
-  intern: any;
   _id: string;
   title: string;
-  description: string;
+  introduction?: string;
+  sections?: { heading: string; content: string }[];
+  conclusion?: string;
+  skillsAcquired?: string[];
+  attachments?: string[];
+  mentee?: any;
   createdAt: string;
   updatedAt?: string;
-  status: 'open' | 'in_progress' | 'closed';
-  author: string;
-  reason: string;
-  message: {
-    _id: string;
-    content: string;
-    sender: { name: string; email: string };
-  };
-  data?: any;  
-  
+  status: 'draft' | 'submitted' | 'validated' | 'rejected';
+  // Champs conservés pour compatibilité avec d'anciens composants non
+  // routés dans l'app (ReportList/ReportUploader) — toujours vides côté
+  // backend réel, ne pas s'appuyer dessus pour de nouvelles fonctionnalités.
+  author?: string;
+  description?: string;
 }
 
-// Récupérer tous les rapports
+// Récupérer tous les rapports (filtrés par rôle côté backend)
 export const getReports = async (): Promise<Report[]> => {
-  const response = await httpClient.get<Report[]>(API_URL);
+  const response = await httpClient.get<Report[]>('/reports');
   return response.data;
 };
 
 // Récupérer un rapport par ID
 export const getReportById = async (id: string): Promise<Report> => {
-  const response = await httpClient.get<Report>(`${API_URL}/${id}`);
+  const response = await httpClient.get<Report>(`/reports/${id}`);
   return response.data;
 };
 
-// Créer un nouveau rapport
-export const createReport = async (report: Omit<Report, '_id' | 'createdAt' | 'updatedAt'>): Promise<Report> => {
-  const response = await httpClient.post<Report>(API_URL, report);
+// Créer un nouveau rapport (brouillon)
+export const createReport = async (report: Partial<Report>): Promise<Report> => {
+  const response = await httpClient.post<Report>('/reports', report);
   return response.data;
 };
 
 // Mettre à jour un rapport existant
 export const updateReport = async (id: string, report: Partial<Report>): Promise<Report> => {
-  const response = await httpClient.put<Report>(`${API_URL}/${id}`, report);
+  const response = await httpClient.put<Report>(`/reports/${id}`, report);
+  return response.data;
+};
+
+// Soumettre un rapport (brouillon -> soumis)
+export const submitReport = async (id: string): Promise<Report> => {
+  const response = await httpClient.put<Report>(`/reports/${id}/submit`, {});
   return response.data;
 };
 
 // Supprimer un rapport
 export const deleteReport = async (id: string): Promise<void> => {
-  await httpClient.delete(`${API_URL}/${id}`);
-};
-
-// Récupérer tous les rapports pour l'administration
-export const getAllReportsForAdmin = async (): Promise<Report[]> => {
-  const response = await httpClient.get<Report[]>('/admin/reports');
-  return response.data;
-};
-
-// Supprimer un rapport par ID pour l'administration
-export const deleteReportById = async (id: string): Promise<void> => {
-  await httpClient.delete(`/admin/reports/${id}`);
-};
-
-
-export const getAllReports = async (): Promise<Report[]> => {
-  const response = await httpClient.get<Report[]>(API_URL);
-  return response.data;
-};
-
-export const resolveReport = async (id: string): Promise<void> => {
-  await httpClient.post(`${API_URL}/${id}/resolve`);
-};
-
-export const deleteReportedMessage = async (id: string): Promise<void> => {
-  await httpClient.delete(`${API_URL}/${id}/message`);
+  await httpClient.delete(`/reports/${id}`);
 };

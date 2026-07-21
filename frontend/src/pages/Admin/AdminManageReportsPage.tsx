@@ -1,6 +1,6 @@
- // src/pages/admin/ManageReportsPage.tsx
+// src/pages/admin/ManageReportsPage.tsx
 import React, { useEffect, useState } from 'react';
-import { getAllReports, resolveReport, deleteReportedMessage, Report } from '@api/report.api';
+import { getAllModerationReports, resolveModerationReport, deleteModerationReportMessage, ModerationReport as Report } from '@api/moderationReport.api';
 import { toast } from 'sonner';
 import { Button } from '@components/common/Button';
 import { Card, CardContent } from '@components/layout/Card';
@@ -13,7 +13,7 @@ const ManageReportsPage: React.FC = () => {
   const fetchReports = async () => {
   setLoading(true);  
   try {
-    const res = await getAllReports();
+    const res = await getAllModerationReports();
     if (Array.isArray(res)) {
       setReports(res);
     } else {
@@ -34,7 +34,7 @@ const ManageReportsPage: React.FC = () => {
 
   const handleResolve = async (reportId: string) => {
   try {
-    await resolveReport(reportId);
+    await resolveModerationReport(reportId);
     toast.success('Signalement marqué comme traité.');
     setReports((prev) =>
       prev.map((r) => (r._id === reportId ? { ...r, status: 'closed' } : r))
@@ -52,7 +52,7 @@ const ManageReportsPage: React.FC = () => {
   if (!confirm) return;
 
   try {
-    await deleteReportedMessage(messageId);
+    await deleteModerationReportMessage(messageId);
     toast.success('Message supprimé avec succès.');
     fetchReports();
   } catch (error) {

@@ -1,8 +1,15 @@
 import express from 'express';
-import { authMiddleware } from '../middlewares/authMiddleware';
+import { authMiddleware, protect, authorize } from '../middlewares/authMiddleware';
 import mentorshipController from '../controllers/mentorshipController';
+import { getAllMentorshipsForAdmin, endMentorshipAsRH } from '../controllers/matchingController';
 
 const router = express.Router();
+
+// Vue RH/Admin (réutilise MentorshipMatch, le modèle utilisé partout ailleurs
+// dans l'app, plutôt que le système Mentorship/MentorshipRequest ci-dessous
+// qui n'est pas branché au reste de l'application).
+router.get('/all', protect, authorize(['rh', 'admin']), getAllMentorshipsForAdmin);
+router.put('/:id/end', protect, authorize(['rh', 'admin']), endMentorshipAsRH);
 
 // Demandes de mentorat
 router.post('/', authMiddleware, mentorshipController.createMentorshipRequest);

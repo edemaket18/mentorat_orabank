@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = '/api/mentorship';
+const API_URL = '/mentorship';
 const API = axios.create({
   baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5001/api',
   withCredentials: true,
@@ -76,7 +76,7 @@ export const deleteMentorshipById = async (id: string): Promise<void> => {
 };
 
 export const getMyMentorships = async (): Promise<Mentorship[]> => {
-  const response = await API.get<Mentorship[]>('/api/mentorships/my');
+  const response = await API.get<Mentorship[]>('/mentorships/my');
   return response.data;
 };
 export const getMentorshipsByMentorId = async (mentorId: string): Promise<Mentorship[]> => {
@@ -90,7 +90,7 @@ export const getMentorshipDetails = async (id: string): Promise<Mentorship> => {
 };
 
 export const getAllMentorships = async (): Promise<Mentorship[]> => {
-  const response = await API.get<Mentorship[]>(`${API_URL}/all`);
+  const response = await API.get<Mentorship[]>('/mentorships/all');
   return response.data;
 };
  

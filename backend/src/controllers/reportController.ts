@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import Report from '../models/Report'; // Assurez-vous que le modèle Report est correct
 import User from '../models/User'; // Pour vérifier les auteurs des rapports
+import MentorshipMatch from '../models/MentorshipMatch';
 
 // @desc    Créer un nouveau rapport
 // @route   POST /api/reports
@@ -200,6 +201,19 @@ export const getAllReportsForAdmin = async (req: Request, res: Response, next: N
     res.json(reports);
   } catch (error) {
     console.error(error);
+    next(error);
+  }
+};
+
+// @desc    Rapports des stagiaires suivis par le mentor connecté uniquement
+// (évite qu'un mentor voie les rapports de tous les stagiaires)
+export const getMenteeReportsForMentor = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const matches = await MentorshipMatch.find({ mentorId: req.users?._id }).select('menteeId');
+    const menteeIds = matches.map((m) => m.menteeId);
+    const reports = await Report.find({ mentee: { $in: menteeIds } }).populate('mentee', 'firstName lastName email');
+    res.json(reports);
+  } catch (error) {
     next(error);
   }
 };

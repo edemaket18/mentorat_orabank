@@ -1,4 +1,4 @@
- import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 // Interface TypeScript pour le modèle User
@@ -14,6 +14,15 @@ export interface IUser extends Document {
   preferences?: {
     language?: string;
     notificationsEnabled?: boolean;
+  };
+  isValidated?: boolean;
+  validatedAt?: Date;
+  validatedBy?: string;
+  stage?: {
+    status?: string;
+    validatedAt?: Date;
+    validatedBy?: string;
+    certificateUrl?: string;
   };
   avatar?: string;
   avatarUrl?: string;
@@ -42,7 +51,7 @@ export interface IUser extends Document {
   showSkills?: boolean;
   showCv?: boolean;
   cvUrl?: string;
-   cvUploadedAt?: Date;
+  cvUploadedAt?: Date;
   mentorships: mongoose.Types.ObjectId[];
   messages: mongoose.Types.ObjectId[];
   createdAt: Date;
@@ -104,12 +113,21 @@ const UserSchema = new Schema<IUser>(
     showSkills: { type: Boolean, default: true },
     showCv: { type: Boolean, default: true },
     cvUrl: String,
-    bio: String,
+    cvUploadedAt: Date,
     department: String,
     university: String,
     preferences: {
       language: { type: String, default: 'fr' },
       notificationsEnabled: { type: Boolean, default: true },
+    },
+    isValidated: { type: Boolean, default: false },
+    validatedAt: Date,
+    validatedBy: String,
+    stage: {
+      status: String,
+      validatedAt: Date,
+      validatedBy: String,
+      certificateUrl: String,
     },
 
     mentorships: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Mentorship' }],

@@ -23,7 +23,7 @@ export interface Matching {
     _id: string;
     name: string;
   };
-  status: 'pending' | 'accepted' | 'rejected';
+  status: 'active' | 'completed' | 'cancelled' | 'pending';
 }
 
 export interface MatchingResult {
@@ -40,16 +40,16 @@ export interface Evaluation {
 
 
 // Récupérer tous les mentors disponibles pour le matching
-export const getAllMentors = () => API.get('/api/matching/mentors');
+export const getAllMentors = () => API.get('/matching/mentors');
 
 // Envoyer une demande à un mentor spécifique
 export const sendRequestToMentor = (mentorId: string) =>
-  API.post(`/api/matching/request/${mentorId}`);
+  API.post(`/matching/request/${mentorId}`);
 
 // Récupérer les correspondances (matchs) de l'utilisateur courant
-export const getMatches = () => API.get('/api/matching/my-matches');
+export const getMatches = () => API.get('/matching/my-matches');
 
-export const getAllMatchings = () => API.get('/api/matching/all');
+export const getAllMatchings = () => API.get('/matching/all');
 
 export const setMatchings = (data: Matching[]) => {
   return data.map((match) => ({

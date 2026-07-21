@@ -162,7 +162,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
 // src/middlewares/adminMiddleware.ts
  
 export const adminMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  if (req.user?.role !== 'admin') {
+  if (req.users?.role !== 'admin') {
     return res.status(403).json({ message: 'Accès non autorisé' });
   }
   next();
@@ -170,5 +170,8 @@ export const adminMiddleware = (req: Request, res: Response, next: NextFunction)
  
 
 export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
-
+  if (req.users?.role !== 'admin') {
+    return res.status(403).json({ message: 'Accès non autorisé' });
+  }
+  next();
 };

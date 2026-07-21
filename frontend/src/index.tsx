@@ -21,4 +21,14 @@ if ('serviceWorker' in navigator) {
       console.warn('Service worker registration failed:', err);
     });
   });
+
+  // Recharge la page une seule fois quand une nouvelle version du service
+  // worker prend le contrôle, pour que l'utilisateur ait toujours la
+  // dernière version de l'app sans avoir à vider son cache manuellement.
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (refreshing) return;
+    refreshing = true;
+    window.location.reload();
+  });
 }

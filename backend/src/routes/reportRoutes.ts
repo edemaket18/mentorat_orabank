@@ -3,6 +3,8 @@ import { protect, authorize } from '../middlewares/authMiddleware';
 import {
     createReport,
     getMyReports,
+    getAllReportsForAdmin,
+    getMenteeReportsForMentor,
     getReportById,
     updateReport,
     submitReport,
@@ -25,9 +27,20 @@ const router = express.Router();
 
 router.use(protect); // Toutes les routes de rapports sont protégées
 
+const listReports = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const role = req.users?.role;
+    if (role === 'admin' || role === 'rh') {
+        return getAllReportsForAdmin(req, res, next);
+    }
+    if (role === 'mentor') {
+        return getMenteeReportsForMentor(req, res, next);
+    }
+    return getMyReports(req, res, next);
+};
+
 router.route('/')
     .post(authorize(['stagiaire']), createOrUpdateReportValidator, createReport) // Seuls les stagiaires créent
-    .get(getMyReports); // Liste les rapports (filtrés par rôle)
+    .get(listReports); // Liste tous les rapports pour rh/admin/mentor, uniquement les siens pour le stagiaire
 
 router.route('/:reportId')
     .get(reportIdParamValidator, getReportById)

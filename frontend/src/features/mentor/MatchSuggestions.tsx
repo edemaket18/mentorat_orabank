@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Matching } from '../../api/matching.api';
 
@@ -20,7 +19,7 @@ const MatchSuggestions: React.FC<MatchSuggestionsProps> = ({ suggestions, onRequ
 					<div key={sugg.intern._id} className="card" style={{ minWidth: 260, maxWidth: 320 }}>
 						<h4 style={{ marginBottom: 8 }}>{sugg.intern.name}</h4>
 						<p style={{ fontSize: 14, color: '#666' }}>ID: {sugg.intern._id}</p>
-						<p style={{ fontSize: 13, color: '#888', marginBottom: 12 }}>Statut: {sugg.status === 'pending' ? 'En attente' : sugg.status === 'accepted' ? 'Accepté' : 'Refusé'}</p>
+						<p style={{ fontSize: 13, color: '#888', marginBottom: 12 }}>Statut: {sugg.status === 'pending' ? 'En attente' : sugg.status === 'active' ? 'Accepté' : 'Terminé'}</p>
 						<button
 							className="auth-button"
 							style={{ width: '100%' }}

@@ -11,6 +11,7 @@ import PublicRoute from './components/common/PublicRoute';
 import PrivateRoute from './routes/PrivateRoute';
 import { AuthProvider } from './context/AuthContext';
 import AppShell from './layouts/AppShell';
+import InstallPrompt from './components/common/InstallPrompt';
 
 // --- Admin ---
 import AdminDashboardPage from '@pages/Admin/AdminDashboardPage';
@@ -84,6 +85,7 @@ function App() {
   return (
     <AuthProvider>
       <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <InstallPrompt />
         <Routes>
           {/* --- Public --- */}
           <Route path="/" element={<HomePage />} />

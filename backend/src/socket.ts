@@ -3,7 +3,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import http from 'http';
 import cors from 'cors';
 import { Server } from 'socket.io';
-import messagesRoutes from './routes/messagesRoutes'; // ✅ Tes routes
+import messagesRoutes from './routes/messagingRoutes'; // ✅ Tes routes
 import dotenv from 'dotenv';
 import { mockAuth } from './middlewares/authMiddleware';
 

@@ -1,12 +1,18 @@
- import React, { useEffect, useState } from 'react';
-import { getAllReports } from '@api/report.api';
-import { Report } from '@api/report.api';
+import React, { useEffect, useState } from 'react';
+import { getReports, Report } from '@api/report.api';
+
+const statusLabels: Record<string, string> = {
+  draft: 'Brouillon',
+  submitted: 'Soumis',
+  validated: 'Validé',
+  rejected: 'Rejeté',
+};
 
 const RHReports = () => {
   const [reports, setReports] = useState<Report[]>([]);
 
   useEffect(() => {
-    getAllReports().then(setReports).catch(console.error);
+    getReports().then(setReports).catch(console.error);
   }, []);
 
   return (
@@ -16,20 +22,23 @@ const RHReports = () => {
         <thead>
           <tr className="border-b">
             <th>Stagiaire</th>
-            <th>Mentor</th>
+            <th>Titre</th>
             <th>Date</th>
-            <th>Status</th>
+            <th>Statut</th>
           </tr>
         </thead>
         <tbody>
           {reports.map((r) => (
             <tr key={r._id} className="border-b">
-              <td>{r.intern.name}</td>
-              <td>{r.mentor.name}</td>
+              <td>{r.mentee ? `${r.mentee.firstName ?? ''} ${r.mentee.lastName ?? ''}`.trim() : '-'}</td>
+              <td>{r.title}</td>
               <td>{new Date(r.createdAt).toLocaleDateString()}</td>
-              <td>{r.status}</td>
+              <td>{statusLabels[r.status] ?? r.status}</td>
             </tr>
           ))}
+          {reports.length === 0 && (
+            <tr><td colSpan={4} className="text-center text-gray-500 py-4">Aucun rapport pour le moment.</td></tr>
+          )}
         </tbody>
       </table></div>
     </div>

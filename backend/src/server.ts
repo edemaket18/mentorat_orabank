@@ -1,4 +1,4 @@
- import express, { Application, Request, Response } from 'express';
+import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
@@ -18,6 +18,9 @@ import notificationRoutes from './routes/notificationRoutes';
 import feedbackRoutes from './routes/feedbackRoutes';
 import rhRoutes from './routes/rhRoutes';
 import mentorRoutes from './routes/mentorRoutes';
+import moderationReportRoutes from './routes/moderationReportRoutes';
+import matchingRoutes from './routes/matchingRoutes';
+import messagingRoutes from './routes/messagingRoutes';
 import studentRoutes from './routes/studentRoutes';
 import uploadCvRoutes from './routes/uploadCvRoutes';
 import attestationRoutes from './routes/attestationsRoutes';
@@ -42,7 +45,7 @@ const allowedOrigins = [
 ];
 
 // DB connection
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/mentorat', {
+mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://edemaket18:Juilletespoir2001%402001@cluster0.hncera4.mongodb.net/orabank_mentorat_test?appName=Cluster0', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 } as any)
@@ -81,7 +84,7 @@ app.get('/api', (req: Request, res: Response) => {
 //app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/profiles', profileRoutes);
-app.use('/api/admin/users', adminUserRoutes);
+app.use('/api/admin', adminUserRoutes);
 app.use('/api/mentorships', mentorshipRoutes);
 app.use('/api/experiences', experienceShareRoutes);
 app.use('/api/skills', skillRoutes);
@@ -92,6 +95,9 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/rh', rhRoutes);
 app.use('/api/mentors', mentorRoutes);
+app.use('/api/moderation-reports', moderationReportRoutes);
+app.use('/api/matching', matchingRoutes);
+app.use('/api/messaging', messagingRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/attestations', attestationRoutes);
 app.use('/api/analytics', analyticsRoutes);
