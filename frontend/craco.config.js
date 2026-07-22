@@ -1,4 +1,4 @@
- const path = require("path");
+const path = require("path");
 
 module.exports = {
   webpack: {
@@ -29,6 +29,17 @@ module.exports = {
         changeOrigin: true,
         secure: false,
       },
+    },
+  },
+
+  jest: {
+    configure: (jestConfig) => {
+      // axios (et certains de ses transitifs) sont publiés en ESM pur ;
+      // sans ça, Jest échoue avec "Cannot use import statement outside a module".
+      jestConfig.transformIgnorePatterns = [
+        "node_modules/(?!(axios)/)",
+      ];
+      return jestConfig;
     },
   },
 };

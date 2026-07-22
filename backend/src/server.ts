@@ -5,6 +5,12 @@ import mongoose from 'mongoose';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import swaggerUi from 'swagger-ui-express';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import mongoSanitize from 'express-mongo-sanitize';
+import hpp from 'hpp';
+import compression from 'compression';
+import morgan from 'morgan';
  import authRoutes from './routes/authRoutes';
 import profileRoutes from './routes/profileRoutes';
 import adminUserRoutes from './routes/adminUserRoutes';
@@ -45,7 +51,7 @@ const allowedOrigins = [
 ];
 
 // DB connection
-mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://edemaket18:Juilletespoir2001%402001@cluster0.hncera4.mongodb.net/orabank_mentorat_test?appName=Cluster0', {
+mongoose.connect(process.env.MONGODB_URI || '', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 } as any)
@@ -53,6 +59,34 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://edemaket18:Juilletespoi
   .catch(err => console.error('❌ MongoDB error:', err));
 
 // Middleware
+app.use(helmet());
+app.use(compression());
+
+// Logs des requêtes HTTP (format compact en prod, détaillé en dev)
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
+
+// Limite le nombre de requêtes par IP pour l'API en général
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 300,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: 'Trop de requêtes, veuillez réessayer plus tard.' },
+});
+
+// Limite plus stricte spécifiquement sur l'authentification (anti brute-force)
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: 'Trop de tentatives de connexion, veuillez réessayer plus tard.' },
+});
+
+app.use('/api/', apiLimiter);
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/register', authLimiter);
+
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -65,6 +99,12 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Nettoie req.body/req.query des opérateurs Mongo ($gt, $ne...) pour se
+// prémunir des injections NoSQL.
+app.use(mongoSanitize());
+// Empêche la pollution de paramètres HTTP (ex: ?role=admin&role=stagiaire)
+app.use(hpp());
 
 app.get('/', (req, res) => {
   res.send('API fonctionne 🚀');
@@ -122,6 +162,12 @@ export const io = new Server(httpServer, {
 io.on('connection', (socket) => {
   console.log('✅ Connexion Socket.io :', socket.id);
 
+  const userId = socket.handshake.query.userId;
+  if (userId) {
+    socket.join(userId as string); // chaque utilisateur rejoint sa room personnelle
+    console.log(`🟢 Utilisateur ${userId} connecté à la room ${userId}`);
+  }
+
   socket.on('joinRoom', (roomId) => {
     socket.join(roomId);
     console.log(`🔗 ${socket.id} a rejoint la room ${roomId}`);
@@ -145,18 +191,4 @@ httpServer.listen(PORT, () => {
 process.on('unhandledRejection', (err) => {
   console.error('Unhandled Rejection:', err);
   process.exit(1);
-});
-
-
- 
-io.on('connection', (socket) => {
-  const userId = socket.handshake.query.userId;
-  if (userId) {
-    socket.join(userId); // chaque user rejoint sa room personnelle
-    console.log(`🟢 Utilisateur ${userId} connecté à la room ${userId}`);
-  }
-
-  socket.on('disconnect', () => {
-    console.log(`🔴 Socket déconnecté: ${socket.id}`);
-  });
 });

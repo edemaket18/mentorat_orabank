@@ -1,26 +1,30 @@
 version: "3.8"
 
+# Variables sensibles (JWT_SECRET, mots de passe...) : créez un fichier
+# ".env" à la racine du projet (non commité, voir .gitignore) avec au
+# minimum JWT_SECRET=une-valeur-longue-et-aleatoire
+# Docker Compose lit automatiquement ce fichier .env.
+
 services:
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "5000:5000"
+      - "5001:5001"
     environment:
       NODE_ENV: development
-      PORT: 5000
-      MONGODB_URI: mongodb://mongo:27017/orabank_mentorat_test
-      JWT_SECRET:  
-      JWT_EXPIRE: 1d
+      PORT: 5001
+      MONGO_URI: mongodb://mongo:27017/orabank_mentorat_test
+      JWT_SECRET: ${JWT_SECRET:?Merci de définir JWT_SECRET dans un fichier .env à la racine}
+      JWT_EXPIRES_IN: 30d
+      FRONTEND_URL: http://localhost:3000
     depends_on:
       - mongo
-    volumes:
-      - mongo-data:/data/db
     restart: unless-stopped
 
   mongo:
-    image: mongo:latest
+    image: mongo:7
     ports:
       - "27017:27017"
     volumes:

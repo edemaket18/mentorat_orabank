@@ -1,4 +1,4 @@
- // src/pages/admin/SettingsPage.tsx
+// src/pages/admin/SettingsPage.tsx
 import React, { useEffect, useState } from 'react';
 import { Input } from '@components/layout/Input';
 import { Button } from '@components/common/Button';
@@ -28,7 +28,7 @@ const SettingsPage: React.FC = () => {
   const fetchSettings = async () => {
     try {
       const res = await getSettings();
-      setSettings(res.data);
+      setSettings((prev) => ({ ...prev, ...res }));
     } catch (err) {
       toast.error('Erreur lors du chargement des paramètres');
     }
@@ -100,4 +100,3 @@ const SettingsPage: React.FC = () => {
 };
 
 export default SettingsPage;
-

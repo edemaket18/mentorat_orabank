@@ -121,9 +121,10 @@ router.get('/settings', async (req, res, next) => {
 
 router.put('/settings', async (req, res, next) => {
   try {
-    const { contactEmail, maintenanceMode } = req.body;
+    const { platformName, contactEmail, maintenanceMode } = req.body;
     let settings = await Settings.findOne();
     if (!settings) settings = new Settings({});
+    if (platformName !== undefined) settings.platformName = platformName;
     if (contactEmail !== undefined) settings.contactEmail = contactEmail;
     if (maintenanceMode !== undefined) settings.maintenanceMode = maintenanceMode;
     await settings.save();

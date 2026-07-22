@@ -32,7 +32,7 @@ COPY package.json .
 COPY .env.example .
 
 # Exposer le port sur lequel l'application tourne
-EXPOSE 5000
+EXPOSE 5001
 
 # Commande pour démarrer l'application
 CMD [ "npm", "start" ]
