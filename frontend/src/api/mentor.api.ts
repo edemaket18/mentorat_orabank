@@ -1,4 +1,4 @@
- import httpClient from './httpClient';
+import httpClient from './httpClient';
 
 import { Intern } from '@api/intern.api';
 
@@ -201,4 +201,53 @@ export const getMyEvaluations = async (): Promise<MentorEvaluationSummary[]> => 
 
 export const createEvaluation = async (intern: string, score: number, comment?: string): Promise<void> => {
   await httpClient.post(`${API_URL}/me/evaluations`, { intern, score, comment });
+};
+
+export interface MentorSession {
+  _id: string;
+  mentor: { _id: string; name: string; email: string } | null;
+  mentee: { _id: string; name: string; email: string } | null;
+  scheduledAt: string;
+  durationMinutes: number;
+  notes?: string;
+  status: 'scheduled' | 'completed' | 'cancelled';
+}
+
+export const getMySessions = async (): Promise<MentorSession[]> => {
+  const response = await httpClient.get<MentorSession[]>(`${API_URL}/me/sessions`);
+  return response.data;
+};
+
+export const scheduleSession = async (payload: {
+  menteeId: string;
+  scheduledAt: string;
+  durationMinutes?: number;
+  notes?: string;
+}): Promise<MentorSession> => {
+  const response = await httpClient.post<MentorSession>(`${API_URL}/me/sessions`, payload);
+  return response.data;
+};
+
+export const updateSessionStatus = async (
+  id: string,
+  status: 'completed' | 'cancelled'
+): Promise<MentorSession> => {
+  const response = await httpClient.patch<MentorSession>(`${API_URL}/me/sessions/${id}/status`, { status });
+  return response.data;
+};
+
+export interface MentorChatMessage {
+  from: 'me' | 'mentor';
+  content: string;
+  timestamp: string;
+}
+
+export const getMessagesWithIntern = async (matchId: string): Promise<MentorChatMessage[]> => {
+  const response = await httpClient.get<MentorChatMessage[]>(`${API_URL}/me/messages`, { params: { matchId } });
+  return response.data;
+};
+
+export const sendMessageToIntern = async (matchId: string, content: string): Promise<MentorChatMessage> => {
+  const response = await httpClient.post<MentorChatMessage>(`${API_URL}/me/messages`, { matchId, content });
+  return response.data;
 };

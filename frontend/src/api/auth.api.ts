@@ -17,6 +17,8 @@ export interface AuthUser {
   bio?: string;
   department?: string;
   university?: string;
+  avatarUrl?: string;
+  createdAt?: string;
   preferences?: {
     language?: string;
     notificationsEnabled?: boolean;
@@ -34,6 +36,8 @@ interface ApiAuthUser {
   bio?: string;
   department?: string;
   university?: string;
+  avatarUrl?: string;
+  createdAt?: string;
   preferences?: { language?: string; notificationsEnabled?: boolean };
 }
 
@@ -50,6 +54,8 @@ interface AuthResponse {
   bio?: string;
   department?: string;
   university?: string;
+  avatarUrl?: string;
+  createdAt?: string;
   preferences?: { language?: string; notificationsEnabled?: boolean };
 }
 
@@ -96,6 +102,8 @@ const normalizeAuthUser = (data: AuthResponse): AuthUser => {
     bio: rawUser.bio,
     department: rawUser.department,
     university: rawUser.university,
+    avatarUrl: rawUser.avatarUrl,
+    createdAt: rawUser.createdAt,
     preferences: rawUser.preferences,
   };
 };
@@ -160,6 +168,15 @@ export interface UpdateProfilePayload {
 export const updateMyProfile = async (payload: UpdateProfilePayload): Promise<AuthUser> => {
   const res = await API.put('/auth/update-profile', payload);
   return normalizeAuthUser(res.data);
+};
+
+export const uploadAvatar = async (file: File): Promise<string> => {
+  const formData = new FormData();
+  formData.append('avatar', file);
+  const res = await API.post('/profile/avatar', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+  return res.data.avatarUrl as string;
 };
 
 export const changePassword = async (currentPassword: string, newPassword: string): Promise<void> => {

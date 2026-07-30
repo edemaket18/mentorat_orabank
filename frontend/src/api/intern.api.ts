@@ -1,4 +1,4 @@
- import httpClient from './httpClient';
+import httpClient from './httpClient';
 
 const API_URL = '/intern';
  
@@ -105,4 +105,19 @@ export const createAndSubmitReport = async (title: string, introduction: string)
   const created = await httpClient.post<InternReport>('/reports', { title, introduction });
   const submitted = await httpClient.put<InternReport>(`/reports/${created.data._id}/submit`, {});
   return submitted.data;
+};
+
+export interface InternSession {
+  _id: string;
+  mentor: { _id: string; name: string; email: string } | null;
+  mentee: { _id: string; name: string; email: string } | null;
+  scheduledAt: string;
+  durationMinutes: number;
+  notes?: string;
+  status: 'scheduled' | 'completed' | 'cancelled';
+}
+
+export const getMySessions = async (): Promise<InternSession[]> => {
+  const response = await httpClient.get<InternSession[]>(`${API_URL}/sessions`);
+  return response.data;
 };

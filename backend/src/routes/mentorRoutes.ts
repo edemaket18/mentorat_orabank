@@ -1,7 +1,9 @@
- import express from 'express';
+import express from 'express';
 import { protect, authorize } from '../middlewares/authMiddleware';
 import { getMentorStatistics } from '../controllers/statisticsController';
 import { createEvaluationForMentor, getMyEvaluations } from '../controllers/evaluationController';
+import { getMentorSessions, createSession, updateSessionStatus } from '../controllers/sessionController';
+import { getMyMessages, sendMessage } from '../controllers/mentorMessageController';
 import {
   getMyInterns,
   getMyMentorships,
@@ -29,5 +31,10 @@ router.get('/me/candidates', getAvailableCandidates);
 router.get('/me/reports', getMyMentorReports);
 router.get('/me/evaluations', getMyEvaluations);
 router.post('/me/evaluations', createEvaluationForMentor);
+router.get('/me/sessions', getMentorSessions);
+router.post('/me/sessions', createSession);
+router.patch('/me/sessions/:id/status', updateSessionStatus);
+router.get('/me/messages', getMyMessages);
+router.post('/me/messages', sendMessage);
 
 export default router;

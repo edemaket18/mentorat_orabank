@@ -1,4 +1,4 @@
- import React from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import type { AppRole } from '../../routes/PrivateRoute';
 
@@ -10,6 +10,7 @@ interface MenuItem {
 const MENUS: Record<'admin' | 'mentor' | 'hr' | 'intern', MenuItem[]> = {
   admin: [
     { label: 'Tableau de bord', path: '/admin/dashboard' },
+    { label: 'Mon profil', path: '/admin/profile' },
     { label: 'Utilisateurs', path: '/admin/users' },
     { label: 'Rôles', path: '/admin/roles' },
     { label: 'Mentorats', path: '/admin/mentorships' },
@@ -24,12 +25,11 @@ const MENUS: Record<'admin' | 'mentor' | 'hr' | 'intern', MenuItem[]> = {
     { label: 'Tableau de bord', path: '/mentor/dashboard' },
     { label: 'Mes stagiaires', path: '/mentor/interns' },
     { label: 'Candidats', path: '/mentor/candidates' },
-    { label: 'Matching', path: '/mentor/matching' },
     { label: 'Mentorats', path: '/mentor/mentorships' },
     { label: 'Sessions', path: '/mentor/sessions' },
+    { label: 'Messagerie', path: '/mentor/messages' },
     { label: 'Évaluations', path: '/mentor/evaluations' },
     { label: 'Rapports', path: '/mentor/reports' },
-    { label: 'Contrats', path: '/mentor/contracts' },
     { label: 'Départs', path: '/mentor/departures' },
     { label: 'Feedback', path: '/mentor/feedback' },
     { label: 'Notifications', path: '/mentor/notifications' },
@@ -59,15 +59,14 @@ const MENUS: Record<'admin' | 'mentor' | 'hr' | 'intern', MenuItem[]> = {
     { label: 'Mon profil', path: '/intern/profile' },
     { label: 'Matching', path: '/intern/matching' },
     { label: 'Mentorats', path: '/intern/mentorships' },
+    { label: 'Sessions', path: '/intern/sessions' },
     { label: 'Messagerie', path: '/intern/messages' },
     { label: 'Rapports', path: '/intern/reports' },
     { label: 'Tâches', path: '/intern/tasks' },
     { label: 'Documents', path: '/intern/documents' },
     { label: 'Contrats', path: '/intern/contracts' },
     { label: 'Évaluations', path: '/intern/evaluations' },
-    { label: 'Sessions', path: '/intern/sessions' },
     { label: 'Départs', path: '/intern/departures' },
-    { label: 'Candidats', path: '/intern/candidates' },
     { label: 'Feedback', path: '/intern/feedback' },
     { label: 'Notifications', path: '/intern/notifications' },
     { label: 'Statistiques', path: '/intern/statistics' },

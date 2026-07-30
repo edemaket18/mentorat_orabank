@@ -31,6 +31,7 @@ import studentRoutes from './routes/studentRoutes';
 import uploadCvRoutes from './routes/uploadCvRoutes';
 import attestationRoutes from './routes/attestationsRoutes';
 import analyticsRoutes from './routes/analyticsRoutes';
+import avatarRoutes from './routes/avatarRoutes';
 
 import { notFound, errorHandler } from './middlewares/errorMiddleware';
 import { specs } from './config/swagger';
@@ -142,6 +143,7 @@ app.use('/api/students', studentRoutes);
 app.use('/api/attestations', attestationRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/uploadCv', uploadCvRoutes);
+app.use('/api/profile', avatarRoutes);
 
 // Error handling
 app.use(notFound);

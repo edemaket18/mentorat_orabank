@@ -1,4 +1,4 @@
- import React from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 import HomePage from './pages/HomePage';
@@ -15,6 +15,7 @@ import InstallPrompt from './components/common/InstallPrompt';
 
 // --- Admin ---
 import AdminDashboardPage from '@pages/Admin/AdminDashboardPage';
+import AdminProfile from '@pages/Admin/AdminProfile';
 import AdminUsers from '@pages/Admin/AdminUsers';
 import AdminManageUsersPage from '@pages/Admin/AdminManageUsersPage';
 import AdminRoles from '@pages/Admin/AdminRoles';
@@ -48,18 +49,17 @@ import RHSettingsPage from '@pages/hr/RHSettingsPage';
 import MentorDashboardPage from '@pages/mentor/MentorDashboardPage';
 import MentorInterns from '@pages/mentor/MentorInterns';
 import MentorCandidates from '@pages/mentor/MentorCandidates';
-import MentorMatching from '@pages/mentor/MentorMatching';
 import MentorMentorships from '@pages/mentor/MentorMentorships';
 import MentorSessions from '@pages/mentor/MentorSessions';
 import MentorEvaluations from '@pages/mentor/MentorEvaluations';
 import MentorReports from '@pages/mentor/MentorReports';
-import MentorContracts from '@pages/mentor/MentorContracts';
 import MentorDepartures from '@pages/mentor/MentorDepartures';
 import MentorFeedback from '@pages/mentor/MentorFeedback';
 import MentorNotifications from '@pages/mentor/MentorNotifications';
 import MentorStatisticsPage from '@pages/mentor/MentorStatisticsPage';
 import MentorProfile from '@pages/mentor/MentorProfile';
 import MentorSettingsPage from '@pages/mentor/MentorSettingsPage';
+import MentorMessages from '@pages/mentor/MentorMessages';
 
 // --- Intern ---
 import InternDashboardPage from '@pages/intern/InternDashboardPage';
@@ -111,6 +111,7 @@ function App() {
             <Route path="/admin/notifications" element={<AdminNotifications />} />
             <Route path="/admin/feedback" element={<AdminFeedback />} />
             <Route path="/admin/settings" element={<AdminSettingsPage />} />
+            <Route path="/admin/profile" element={<AdminProfile />} />
           </Route>
 
           {/* --- RH --- */}
@@ -137,18 +138,19 @@ function App() {
             <Route path="/mentor/dashboard" element={<MentorDashboardPage />} />
             <Route path="/mentor/interns" element={<MentorInterns />} />
             <Route path="/mentor/candidates" element={<MentorCandidates />} />
-            <Route path="/mentor/matching" element={<MentorMatching />} />
+            <Route path="/mentor/matching" element={<Navigate to="/mentor/candidates" replace />} />
             <Route path="/mentor/mentorships" element={<MentorMentorships />} />
             <Route path="/mentor/sessions" element={<MentorSessions />} />
             <Route path="/mentor/evaluations" element={<MentorEvaluations />} />
             <Route path="/mentor/reports" element={<MentorReports />} />
-            <Route path="/mentor/contracts" element={<MentorContracts />} />
+            <Route path="/mentor/contracts" element={<Navigate to="/mentor/interns" replace />} />
             <Route path="/mentor/departures" element={<MentorDepartures />} />
             <Route path="/mentor/feedback" element={<MentorFeedback />} />
             <Route path="/mentor/notifications" element={<MentorNotifications />} />
             <Route path="/mentor/statistics" element={<MentorStatisticsPage />} />
             <Route path="/mentor/profile" element={<MentorProfile />} />
             <Route path="/mentor/settings" element={<MentorSettingsPage />} />
+            <Route path="/mentor/messages" element={<MentorMessages />} />
           </Route>
 
           {/* --- Stagiaire --- */}

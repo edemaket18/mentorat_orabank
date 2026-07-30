@@ -1,4 +1,4 @@
- import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import User from '../models/User';
 import Profile from '../models/Profile';
 import generateToken from '../utils/generateToken';
@@ -100,6 +100,8 @@ export const loginUser = async (req: Request, res: Response) => {
       redirect = '/stagiaire';
     } else if (role === 'mentor') {
       redirect = '/mentor';
+    } else if (role === 'rh') {
+      redirect = '/rh';
     } else {
       return res.status(400).json({ message: 'Rôle inconnu' });
     }
@@ -169,6 +171,8 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
       bio: updatedUser.bio,
       department: (updatedUser as any).department,
       university: (updatedUser as any).university,
+      avatarUrl: (updatedUser as any).avatarUrl,
+      createdAt: (updatedUser as any).createdAt,
       preferences: (updatedUser as any).preferences,
     });
   } catch (error) {
