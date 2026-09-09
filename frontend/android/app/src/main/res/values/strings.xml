@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Orabank Mentorat</string>
+    <string name="title_activity_main">Orabank Mentorat</string>
+    <string name="package_name">com.orabank.mentorat</string>
+    <string name="custom_url_scheme">com.orabank.mentorat</string>
+</resources>
