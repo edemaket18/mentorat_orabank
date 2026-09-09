@@ -44,6 +44,17 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
         return res.status(401).json({ message: 'Utilisateur non trouvé.' });
       }
 
+      if (!req.users.isActive) {
+        return res.status(403).json({ message: 'Ce compte a été désactivé. Contactez un administrateur.' });
+      }
+
+      if (req.users.registrationStatus === 'pending') {
+        return res.status(403).json({
+          message: "Votre inscription est en attente de validation par un administrateur.",
+          code: 'ACCOUNT_PENDING_APPROVAL',
+        });
+      }
+
       next();
     } catch (error) {
       console.error('Erreur de token:', error);

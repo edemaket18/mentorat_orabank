@@ -1,22 +1,18 @@
  // src/pages/admin/DashboardPage.tsx
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { getDashboardStats } from '@api/admin.api';
 import { toast } from 'sonner';
 import { Card, CardContent } from '@components/layout/Card';
-import { StatsChart } from '@features/chat/StatsChart';
 import { Loader2 } from 'lucide-react';
 
 interface Stats {
   totalUsers: number;
   totalMentors: number;
-  totalInterns: number;
+  totalStagiaires: number;
   totalReports: number;
-  totalProjects: number;
-  totalSessions: number;
-  totalFeedbacks: number;
-  totalAnnouncements: number;
-  totalMessages: number;
-  monthlyRegistrations: { month: string; count: number }[];
+  totalMentorships: number;
+  totalAttestations: number;
 }
 
 const StatCard = ({ title, value }: { title: string; value: number }) => (
@@ -36,7 +32,7 @@ const AdminDashboardPage: React.FC = () => {
     const fetchStats = async () => {
       try {
         const res = await getDashboardStats();
-        setStats(res.data);
+        setStats(res);
       } catch (error) {
         toast.error('Erreur lors du chargement des statistiques.');
       } finally {
@@ -61,29 +57,31 @@ const AdminDashboardPage: React.FC = () => {
   return (
     <div className="dashboard-shell dashboard-page">
       <div className="dashboard-heading">
-        <h1 className="text-2xl font-bold">Tableau de bord Admin</h1>
+        <div>
+          <p className="dashboard-eyebrow">Administration</p>
+          <h1 className="text-2xl font-bold">Tableau de bord Admin</h1>
+          <p className="dashboard-subtitle">Pilotez les accès, le mentorat et les indicateurs de la plateforme.</p>
+        </div>
+        <Link className="orabank-link" to="/admin/users">Gérer les utilisateurs</Link>
       </div>
 
       <div className="dashboard-grid">
         <StatCard title="Utilisateurs" value={stats.totalUsers} />
         <StatCard title="Mentors" value={stats.totalMentors} />
-        <StatCard title="Stagiaires" value={stats.totalInterns} />
-        <StatCard title="Signalements" value={stats.totalReports} />
+        <StatCard title="Stagiaires" value={stats.totalStagiaires} />
+        <StatCard title="Rapports" value={stats.totalReports} />
+        <StatCard title="Mentorats" value={stats.totalMentorships} />
       </div>
 
       <div className="dashboard-section">
         <Card className="dashboard-card">
           <CardContent className="p-4">
-            <h2 className="text-lg font-semibold mb-4">Évolution mensuelle</h2>
-            <StatsChart
-              data={stats.monthlyRegistrations.map((item) => ({
-                id: item.month,
-                name: item.month,
-                value: item.count,
-                month: item.month,
-                count: item.count,
-              }))}
-            />
+            <h2 className="text-lg font-semibold mb-4">Actions administratives</h2>
+            <div className="dashboard-action-links">
+              <Link to="/admin/users">Valider les inscriptions et gérer les comptes</Link>
+              <Link to="/admin/mentorships">Suivre les mentorats en cours</Link>
+              <Link to="/admin/statistics">Consulter les statistiques détaillées</Link>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -92,5 +90,3 @@ const AdminDashboardPage: React.FC = () => {
 };
 
 export default AdminDashboardPage;
-
- 

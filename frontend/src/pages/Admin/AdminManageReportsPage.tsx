@@ -61,12 +61,6 @@ const ManageReportsPage: React.FC = () => {
 };
 
  
-const chartData = reports.map((report) => ({
-  name: new Date(report.createdAt).toLocaleDateString('fr-FR'),
-  value: 1,  
-}));
-
-
   if (reports.length === 0 && !loading) {
     return <p className="text-center text-muted-foreground">Aucun signalement en attente.</p>;
   }

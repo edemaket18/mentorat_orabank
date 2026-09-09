@@ -3,13 +3,6 @@ import { getAllMatchings } from '@api/matching.api';
 import { Matching } from '@api/matching.api';
 import { Card, CardContent } from '@components/layout/Card';
 
-
-interface Props {
-  
-  matchings: Matching[];
-
-}
-
 const RHMatching = () => {
   const [matchings, setMatchings] = useState<Matching[]>([]);
 

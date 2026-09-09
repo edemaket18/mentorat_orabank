@@ -7,7 +7,7 @@ export const userIdParamValidator = [
 export const updateUserRoleValidator = [
     body('role')
         .notEmpty().withMessage("Le rôle est requis.")
-        .isIn(['stagiaire', 'mentor', 'admin']).withMessage("Le rôle doit être 'stagiaire', 'mentor', ou 'admin'.")
+        .isIn(['stagiaire', 'mentor', 'rh', 'admin']).withMessage("Le rôle doit être 'stagiaire', 'mentor', 'rh' ou 'admin'.")
 ];
 
 export const updateUserStatusValidator = [

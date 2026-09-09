@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from '@components/layout/Card';
 import { Button } from '@components/common/Button';
-import { Input } from '@components/layout/Input';
 
 interface HR {
   id: string;

@@ -18,8 +18,9 @@ export interface AdminUser {
   _id: string;
   name: string;
   email: string;
-  role: 'admin' | 'mentor' | 'intern' | 'hr';
+  role: 'admin' | 'mentor' | 'intern' | 'stagiaire' | 'hr' | 'rh';
   isActive: boolean;
+  registrationStatus?: 'pending' | 'approved';
   firstName: string;
   lastName: string;
   avatar?: string;
@@ -47,6 +48,12 @@ export const deleteUser = async (id: string): Promise<void> => {
 // Mettre à jour le rôle d'un utilisateur
 export const updateUserRole = async (id: string, role: string): Promise<AdminUser> => {
   const response = await API.put<AdminUser>(`${API_URL}/users/${id}/role`, { role });
+  return response.data;
+};
+
+// Approuver une inscription en attente : le compte pourra alors se connecter.
+export const approveUserRegistration = async (id: string): Promise<AdminUser> => {
+  const response = await API.patch<AdminUser>(`${API_URL}/users/${id}/approval`);
   return response.data;
 };
 

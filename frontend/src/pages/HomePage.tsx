@@ -2,14 +2,16 @@
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import NotAuthorized from '../components/NotAuthorized';
+import OrabankBrand from '../components/common/OrabankBrand';
 
 const HomePage: React.FC = () => {
   const { user, loading } = useAuth();
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', background: '#f8fafc' }}>
-        <p style={{ fontSize: '1.1rem', color: '#334155' }}>Chargement de votre espace...</p>
+      <div className="orabank-loading">
+        <OrabankBrand />
+        <p>Chargement de votre espace...</p>
       </div>
     );
   }
@@ -20,10 +22,7 @@ const HomePage: React.FC = () => {
         <div className="mobile-shell__inner">
           <div className="mobile-grid">
             <div className="mobile-hero-copy">
-              <div className="mobile-pill">
-                <span style={{ fontSize: '1rem' }}>🏦</span>
-                Orabank Togo - Programme de mentorat
-              </div>
+              <div className="mobile-pill"><OrabankBrand compact /> Programme de mentorat</div>
               <h1 className="mobile-title">Favorisons l’épanouissement, la transmission de savoir et l’innovation.</h1>
               <p className="mobile-text">
                 Orabank Togo met en place une plateforme dédiée au mentorat pour accompagner les talents, renforcer les compétences et créer des opportunités de développement durable au sein de la banque et de ses partenaires.

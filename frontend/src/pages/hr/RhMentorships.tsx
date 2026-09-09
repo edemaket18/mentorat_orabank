@@ -5,7 +5,6 @@ import { Card, CardContent } from '@components/layout/Card';
 import { Input } from '@components/layout/Input';
 import { Select, SelectItem } from '@components/layout/Select';
 import { Button } from '@components/common/Button';
-import { Badge } from '@components/layout/Badge';
 import { toast } from 'react-hot-toast';
 
 export const RHMentorships: React.FC = () => {

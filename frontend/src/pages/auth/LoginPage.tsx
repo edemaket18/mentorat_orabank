@@ -1,13 +1,15 @@
  import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth, AuthUser } from '../../context/AuthContext';
 import { AuthService } from '../../services/authService';
+import OrabankBrand from '../../components/common/OrabankBrand';
 
 export default function LoginPage() {
 	const [form, setForm] = useState({ email: '', password: '' });
 	const [error, setError] = useState<string | null>(null);
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
+	const location = useLocation();
 	const { login } = useAuth();
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,8 +46,8 @@ export default function LoginPage() {
 				role: user.role as AuthUser['role'],
 			});
 			navigate('/');
-		} catch (err) {
-			setError('Adresse email ou mot de passe incorrect.');
+		} catch (err: any) {
+			setError(err?.response?.data?.message || 'Adresse email ou mot de passe incorrect.');
 		} finally {
 			setLoading(false);
 		}
@@ -55,7 +57,7 @@ export default function LoginPage() {
 		<div className="auth-shell">
 			<div className="auth-grid">
 				<div className="auth-intro">
-					<p style={{ color: '#2563eb', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '1rem' }}>Orabank Mentorat</p>
+					<OrabankBrand />
 					<h1>Reprenez le contrôle de votre parcours.</h1>
 					<p>Connectez-vous pour accéder à vos rendez-vous, documents et suivis de mentorat en toute simplicité.</p>
 				</div>
@@ -69,6 +71,9 @@ export default function LoginPage() {
 						<h2>Connexion</h2>
 						<p>Accédez à votre espace mentorat</p>
 					</div>
+					{location.state?.registrationMessage && (
+						<div className="auth-success" role="status">{location.state.registrationMessage}</div>
+					)}
 					<form className="auth-form" onSubmit={handleSubmit} autoComplete="off">
 						<div className="form-group">
 							<label htmlFor="email">Adresse email</label>
@@ -103,8 +108,8 @@ export default function LoginPage() {
 						</button>
 					</form>
 					<div className="auth-footer">
-						<Link to="/register" style={{ color: '#2563eb', textDecoration: 'none' }}>Créer un compte</Link>
-						<Link to="/forgot-password" style={{ color: '#2563eb', textDecoration: 'none' }}>Mot de passe oublié ?</Link>
+						<Link to="/register" className="orabank-link">Créer un compte</Link>
+						<Link to="/forgot-password" className="orabank-link">Mot de passe oublié ?</Link>
 					</div>
 				</div>
 			</div>

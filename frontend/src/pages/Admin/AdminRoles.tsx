@@ -10,9 +10,8 @@ import {
   SelectValue,
 } from '@components/layout/Select';
 import { Card, CardContent } from '@components/layout/Card';
-import { response } from 'express';
 
-const roles = ['admin', 'mentor', 'intern', 'rh'];
+const roles = ['admin', 'mentor', 'stagiaire', 'rh'];
 
 const AdminRoles: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -40,7 +39,7 @@ const AdminRoles: React.FC = () => {
       await updateUserRole(userId, newRole);
       setUsers((prev) =>
   prev.map((user) =>
-    user._id === userId ? { ...user, role: newRole as 'admin' | 'mentor' | 'intern' | 'hr' } : user
+    user._id === userId ? { ...user, role: newRole as User['role'] } : user
   )
 );
 

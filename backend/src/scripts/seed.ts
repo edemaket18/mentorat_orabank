@@ -38,6 +38,7 @@ const run = async () => {
       password: DEFAULT_PASSWORD,
       role: seedUser.role,
       isActive: true,
+      registrationStatus: 'approved',
       isVerified: true,
       emailVerified: true,
     });

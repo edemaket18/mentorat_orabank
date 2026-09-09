@@ -133,6 +133,37 @@ export const updateUserStatus = async (req: Request, res: Response, next: NextFu
   }
 };
 
+// @desc    Approuver l'inscription d'un utilisateur (Admin)
+// @route   PATCH /api/admin/users/:userId/approval
+// @access  Private/Admin
+export const approveUserRegistration = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = await User.findById(req.params.userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    }
+
+    user.registrationStatus = 'approved';
+    await user.save();
+
+    res.json({
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      role: user.role,
+      isActive: user.isActive,
+      registrationStatus: user.registrationStatus,
+    });
+  } catch (error) {
+    if (error instanceof Error && error.name === 'CastError') {
+      return res.status(400).json({ message: 'ID utilisateur invalide' });
+    }
+    next(error);
+  }
+};
+
 // @desc    Supprimer un utilisateur (Admin)
 // @route   DELETE /api/admin/users/:userId
 // @access  Private/Admin
@@ -170,4 +201,3 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
     next(error);
   }
 };
-

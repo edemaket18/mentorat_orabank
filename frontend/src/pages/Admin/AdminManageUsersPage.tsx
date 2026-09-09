@@ -1,7 +1,7 @@
  // src/pages/admin/ManageUsersPage.tsx
 import React, { useEffect, useState } from 'react';
 import { User } from '@api/admin.api';
-import { getAllUsers, deleteUser } from '@api/admin.api';
+import { getAllUsers, deleteUser, approveUserRegistration } from '@api/admin.api';
 import { Input } from '@components/layout/Input';
 import { Button } from '@components/common/Button';
 import { Card, CardContent } from '@components/layout/Card';
@@ -38,8 +38,20 @@ const ManageUsersPage: React.FC = () => {
     }
   };
 
+  const handleApproval = async (userId: string) => {
+    try {
+      const approvedUser = await approveUserRegistration(userId);
+      setUsers((prev) => prev.map((user) => user._id === userId ? { ...user, ...approvedUser } : user));
+      toast.success("Inscription validée : l'utilisateur peut maintenant se connecter.");
+    } catch (error) {
+      toast.error("Impossible de valider l'inscription.");
+    }
+  };
+
+  const getUserName = (user: User) => user.name || `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email;
+
   const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().includes(search.toLowerCase()) ||
+    getUserName(user).toLowerCase().includes(search.toLowerCase()) ||
     user.email.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -60,10 +72,19 @@ const ManageUsersPage: React.FC = () => {
           <Card key={user._id}>
             <CardContent className="flex items-center justify-between p-4">
               <div>
-                <p className="font-semibold">{user.name}</p>
+                <p className="font-semibold">{getUserName(user)}</p>
                 <p className="text-sm text-muted-foreground">{user.email}</p>
-                <span className="text-xs text-primary">{user.role}</span>
+                <span className="text-xs text-primary">{user.role} · {user.registrationStatus === 'pending' ? 'En attente de validation' : 'Validé'}</span>
               </div>
+              {user.registrationStatus === 'pending' && (
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => handleApproval(user._id)}
+                >
+                  Valider l'inscription
+                </Button>
+              )}
               <Button
                 variant="primary"
                 size="sm"

@@ -14,7 +14,9 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
 
     const normalizedFirstName = firstName || (name ? name.split(/\s+/)[0] : '');
     const normalizedLastName = lastName || (name ? name.split(/\s+/).slice(1).join(' ') : '');
-    const normalizedRole = role === 'intern' ? 'stagiaire' : (role === 'stagiaire' ? 'stagiaire' : (role || 'stagiaire'));
+    // L'inscription publique ne peut créer que les deux profils métier.
+    // Les comptes Admin et RH doivent être créés par un administrateur.
+    const normalizedRole = role === 'mentor' ? 'mentor' : 'stagiaire';
 
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -27,19 +29,23 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
       email,
       password,
       role: normalizedRole,
+      // Tout compte créé depuis le formulaire public doit être approuvé par
+      // un administrateur avant de pouvoir accéder à la plateforme.
+      registrationStatus: 'pending',
     });
 
     await Profile.create({ user: user._id });
 
     res.status(201).json({
+      message: "Votre demande d'inscription a été enregistrée. Un administrateur la validera dans les 24 heures.",
       user: {
         _id: user._id,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
         role: user.role,
+        registrationStatus: user.registrationStatus,
       },
-      token: generateToken(user._id),
     });
   } catch (error) {
     next(error);
@@ -89,6 +95,19 @@ export const loginUser = async (req: Request, res: Response) => {
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return res.status(401).json({ message: 'Email ou mot de passe invalide' });
+    }
+
+    if (!user.isActive) {
+      return res.status(403).json({ message: 'Ce compte a été désactivé. Contactez un administrateur.' });
+    }
+
+    // Les comptes historiques qui ne possèdent pas encore ce champ restent
+    // utilisables. Seuls les comptes explicitement en attente sont bloqués.
+    if (user.registrationStatus === 'pending') {
+      return res.status(403).json({
+        message: "Votre inscription est en attente de validation par un administrateur. Vous recevrez l'accès dans un délai maximum de 24 heures.",
+        code: 'ACCOUNT_PENDING_APPROVAL',
+      });
     }
 
     // Redirection basée sur le rôle
@@ -157,7 +176,9 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
     if (preferences !== undefined) {
       (user as any).preferences = { ...(user as any).preferences, ...preferences };
     }
-    if (password) user.password = await bcrypt.hash(password, 10);
+    // Le hook du modèle hache le mot de passe. Lui fournir la valeur en clair
+    // évite un double hachage qui rendrait la prochaine connexion impossible.
+    if (password) user.password = password;
 
     const updatedUser = await user.save();
 
@@ -229,7 +250,7 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
 
     if (!user) return res.status(400).json({ message: 'Lien invalide ou expiré' });
 
-    user.password = await bcrypt.hash(password, 10);
+    user.password = password;
     user.resetToken = undefined;
     user.resetTokenExpires = undefined;
 
@@ -252,7 +273,7 @@ export const changePassword = async (req: Request, res: Response, next: NextFunc
     const isMatch = await bcrypt.compare(oldPassword, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Ancien mot de passe incorrect' });
 
-    user.password = await bcrypt.hash(newPassword, 10);
+    user.password = newPassword;
     await user.save();
 
     res.status(200).json({ message: 'Mot de passe changé avec succès' });

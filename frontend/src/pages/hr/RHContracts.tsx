@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getContracts } from '@api/contract.api';
 import { Contract } from '@api/contract.api';
-import { Card, CardContent } from '@components/layout/Card';
-import { Button } from '@components/common/Button';
-import { toast } from 'react-toastify';
 
 
 

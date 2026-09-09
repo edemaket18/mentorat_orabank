@@ -5,6 +5,7 @@ import { Button } from '@components/common/Button';
 import { Card, CardContent } from '@components/layout/Card';
 import { toast } from 'sonner';
 import { getSettings, updateSettings } from '@api/admin.api';
+import AccountSettings from '@features/profile/AccountSettings';
 
 interface Settings {
   platformName: string;
@@ -56,7 +57,10 @@ const SettingsPage: React.FC = () => {
 
   return (
     <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Paramètres de la plateforme</h1>
+      <div>
+        <p className="dashboard-eyebrow">Administration</p>
+        <h1 className="text-2xl font-bold">Paramètres de la plateforme</h1>
+      </div>
 
       <Card>
         <CardContent className="space-y-4 p-6">
@@ -95,6 +99,8 @@ const SettingsPage: React.FC = () => {
           </Button>
         </CardContent>
       </Card>
+
+      <AccountSettings title="Mon compte administrateur" />
     </div>
   );
 };

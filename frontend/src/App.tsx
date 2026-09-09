@@ -16,7 +16,6 @@ import InstallPrompt from './components/common/InstallPrompt';
 // --- Admin ---
 import AdminDashboardPage from '@pages/Admin/AdminDashboardPage';
 import AdminProfile from '@pages/Admin/AdminProfile';
-import AdminUsers from '@pages/Admin/AdminUsers';
 import AdminManageUsersPage from '@pages/Admin/AdminManageUsersPage';
 import AdminRoles from '@pages/Admin/AdminRoles';
 import AdminMentorships from '@pages/Admin/AdminMentorships';
@@ -101,7 +100,6 @@ function App() {
           <Route element={<PrivateRoute allowedRoles={['admin']}><AppShell /></PrivateRoute>}>
             <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
             <Route path="/admin/users" element={<AdminManageUsersPage />} />
-            <Route path="/admin/users-list" element={<AdminUsers />} />
             <Route path="/admin/roles" element={<AdminRoles />} />
             <Route path="/admin/mentorships" element={<AdminMentorships />} />
             <Route path="/admin/moderation" element={<AdminManageReportsPage />} />
@@ -138,12 +136,10 @@ function App() {
             <Route path="/mentor/dashboard" element={<MentorDashboardPage />} />
             <Route path="/mentor/interns" element={<MentorInterns />} />
             <Route path="/mentor/candidates" element={<MentorCandidates />} />
-            <Route path="/mentor/matching" element={<Navigate to="/mentor/candidates" replace />} />
             <Route path="/mentor/mentorships" element={<MentorMentorships />} />
             <Route path="/mentor/sessions" element={<MentorSessions />} />
             <Route path="/mentor/evaluations" element={<MentorEvaluations />} />
             <Route path="/mentor/reports" element={<MentorReports />} />
-            <Route path="/mentor/contracts" element={<Navigate to="/mentor/interns" replace />} />
             <Route path="/mentor/departures" element={<MentorDepartures />} />
             <Route path="/mentor/feedback" element={<MentorFeedback />} />
             <Route path="/mentor/notifications" element={<MentorNotifications />} />

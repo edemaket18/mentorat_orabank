@@ -55,8 +55,8 @@ router.post('/change-password', protect, async (req, res) => {
     if (!isMatch)
       return res.status(401).json({ message: 'Mot de passe actuel incorrect.' });
 
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    user.password = hashedPassword;
+    // Le hook pre('save') de User effectue déjà le hachage.
+    user.password = newPassword;
     await user.save();
  
      await sendEmail({

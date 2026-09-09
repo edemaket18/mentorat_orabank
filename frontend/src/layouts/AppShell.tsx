@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import { useAuth } from '@hooks/useAuth';
 import Sidebar from '../features/common/Sidebar';
+import OrabankBrand from '../components/common/OrabankBrand';
 import type { AppRole } from '../routes/PrivateRoute';
 
 const ROLE_LABELS: Record<string, string> = {
@@ -32,7 +33,7 @@ const AppShell: React.FC = () => {
         >
           ☰
         </button>
-        <Link to="/" className="app-topbar__brand">Orabank Mentorat</Link>
+        <Link to="/" className="app-topbar__brand"><OrabankBrand compact /></Link>
         <div className="app-topbar__user">
           <span className="app-topbar__role">{ROLE_LABELS[role] ?? role}</span>
           <span className="app-topbar__name">{user.name}</span>

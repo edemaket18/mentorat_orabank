@@ -16,6 +16,7 @@ export interface IUser extends Document {
     notificationsEnabled?: boolean;
   };
   isValidated?: boolean;
+  registrationStatus?: 'pending' | 'approved';
   validatedAt?: Date;
   validatedBy?: string;
   stage?: {
@@ -121,6 +122,9 @@ const UserSchema = new Schema<IUser>(
       notificationsEnabled: { type: Boolean, default: true },
     },
     isValidated: { type: Boolean, default: false },
+    // Ce statut est distinct de isValidated, qui concerne la validation du
+    // stage et l'émission de son attestation.
+    registrationStatus: { type: String, enum: ['pending', 'approved'] },
     validatedAt: Date,
     validatedBy: String,
     stage: {

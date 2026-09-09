@@ -1,7 +1,6 @@
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import mongoose from 'mongoose';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import swaggerUi from 'swagger-ui-express';
@@ -32,6 +31,7 @@ import uploadCvRoutes from './routes/uploadCvRoutes';
 import attestationRoutes from './routes/attestationsRoutes';
 import analyticsRoutes from './routes/analyticsRoutes';
 import avatarRoutes from './routes/avatarRoutes';
+import connectDB from './config/db';
 
 import { notFound, errorHandler } from './middlewares/errorMiddleware';
 import { specs } from './config/swagger';
@@ -52,12 +52,7 @@ const allowedOrigins = [
 ];
 
 // DB connection
-mongoose.connect(process.env.MONGODB_URI || '', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-} as any)
-  .then(() => console.log('✅ MongoDB connecté'))
-  .catch(err => console.error('❌ MongoDB error:', err));
+connectDB();
 
 // Middleware
 app.use(helmet());

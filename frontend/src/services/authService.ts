@@ -1,5 +1,5 @@
 
-import { login, logout, register, getCurrentUser, resetPassword, sendPasswordResetEmail, AuthUser } from '../api/auth.api';
+import { login, logout, register, getCurrentUser, resetPassword, sendPasswordResetEmail, AuthUser, RegistrationResponse } from '../api/auth.api';
 
 export const AuthService = {
 	/**
@@ -19,7 +19,7 @@ export const AuthService = {
 	/**
 	 * Inscription utilisateur
 	 */
-	register: async (name: string, email: string, password: string, role: any): Promise<AuthUser> => {
+	register: async (name: string, email: string, password: string, role: any): Promise<RegistrationResponse> => {
 		return await register(name, email, password, role);
 	},
 
@@ -46,4 +46,3 @@ export const AuthService = {
 };
 
 export { login };
- 

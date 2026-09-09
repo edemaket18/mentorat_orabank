@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { register } from '../../api/auth.api';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
+import OrabankBrand from '../../components/common/OrabankBrand';
 
 const initialState = {
   name: '',
@@ -16,7 +16,6 @@ export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -53,14 +52,8 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       const { name, email, password, role } = form;
-      const user = await register(name, email, password, role);
-      login({
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role as 'intern' | 'mentor',
-      });
-      navigate('/');
+      const result = await register(name, email, password, role);
+      navigate('/login', { state: { registrationMessage: result.message } });
     } catch (err: any) {
       setError(err?.response?.data?.message || "Erreur lors de l'inscription.");
     } finally {
@@ -72,7 +65,7 @@ export default function RegisterPage() {
     <div className="auth-shell">
       <div className="auth-grid">
         <div className="auth-intro">
-          <p style={{ color: '#2563eb', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '1rem' }}>Rejoignez-nous</p>
+          <OrabankBrand />
           <h1>Créer votre compte mentorat en quelques secondes.</h1>
           <p>Choisissez votre profil, créez un accès sécurisé puis accédez à l’ensemble des services proposés.</p>
         </div>
@@ -167,7 +160,7 @@ export default function RegisterPage() {
           </form>
           <div className="auth-footer auth-footer--center">
             <span>Déjà un compte ? </span>
-            <Link to="/login" style={{ color: '#2563eb', textDecoration: 'none' }}>Se connecter</Link>
+            <Link to="/login" className="orabank-link">Se connecter</Link>
           </div>
         </div>
       </div>

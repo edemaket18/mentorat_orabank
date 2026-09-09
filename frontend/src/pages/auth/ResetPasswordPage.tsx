@@ -6,6 +6,7 @@ import { Button } from '@components/common/Button';
 import { Card, CardContent } from '@components/layout/Card';
 import { toast } from 'sonner';
 import { resetPassword } from '@api/auth.api';
+import OrabankBrand from '../../components/common/OrabankBrand';
 
  
 const ResetPasswordPage: React.FC = () => {
@@ -56,7 +57,7 @@ const ResetPasswordPage: React.FC = () => {
         <Card className="shadow-xl border border-slate-200">
           <CardContent className="p-8">
             <div className="mb-6 text-center">
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-sky-700">Orabank Mentorat</p>
+              <OrabankBrand />
               <h2 className="mt-3 text-3xl font-bold text-slate-900">Réinitialisez votre mot de passe</h2>
               <p className="mt-2 text-sm text-slate-600">Entrez un nouveau mot de passe et confirmez-le pour sécuriser votre compte.</p>
             </div>

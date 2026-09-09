@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { sendPasswordResetEmail } from '@api/auth.api';
 import { Link } from 'react-router-dom';
+import OrabankBrand from '../../components/common/OrabankBrand';
 
 const ForgotPasswordPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -31,13 +32,10 @@ const ForgotPasswordPage: React.FC = () => {
   };
 
   return (
-    <div className="auth-shell" style={{ background: 'linear-gradient(135deg, #f0f4ff 0%, #e2e8f0 100%)' }}>
+    <div className="auth-shell">
       <div className="auth-card">
         <div className="auth-card__header">
-          <div className="mobile-pill" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.55rem', padding: '0.75rem 1rem', borderRadius: '999px', backgroundColor: '#eef2ff', color: '#4338ca', fontWeight: 700, fontSize: '0.85rem' }}>
-            <span>🏦</span>
-            Orabank Mentorat
-          </div>
+          <div className="mobile-pill"><OrabankBrand compact /> Programme de mentorat</div>
           <h1 className="auth-card__header-title">Mot de passe oublié</h1>
           <p className="auth-card__header-text">
             Saisissez votre adresse email pour recevoir un lien sécurisé de réinitialisation.
@@ -77,7 +75,7 @@ const ForgotPasswordPage: React.FC = () => {
           )}
 
           <div className="auth-footer auth-footer--center" style={{ marginTop: '0.75rem' }}>
-            <Link to="/login" style={{ color: '#2563eb', textDecoration: 'none' }}>
+            <Link to="/login" className="orabank-link">
               Retour à la connexion
             </Link>
             <Link to="/" style={{ color: '#64748b', textDecoration: 'none' }}>

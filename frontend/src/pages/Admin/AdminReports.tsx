@@ -1,7 +1,6 @@
 // src/pages/admin/AdminReports.tsx
 import React, { useEffect, useState } from 'react';
 import { getStats } from '@api/admin.api';
- import { Card, CardContent } from '@components/layout/Card';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 const AdminReports: React.FC = () => {
@@ -10,16 +9,16 @@ const AdminReports: React.FC = () => {
   useEffect(() => {
     const fetchStats = async () => {
       const res = await getStats();
-      setStats(res.data);
+      setStats(res);
     };
     fetchStats();
   }, []);
 
   const chartData = [
-    { name: 'Stagiaires', value: stats.interns || 0 },
-    { name: 'Mentors', value: stats.mentors || 0 },
-    { name: 'Sessions', value: stats.sessions || 0 },
-    { name: 'Rapports', value: stats.reports || 0 },
+    { name: 'Stagiaires', value: stats.totalStagiaires || 0 },
+    { name: 'Mentors', value: stats.totalMentors || 0 },
+    { name: 'Mentorats', value: stats.totalMentorships || 0 },
+    { name: 'Rapports', value: stats.totalReports || 0 },
   ];
 
   return (
@@ -30,7 +29,7 @@ const AdminReports: React.FC = () => {
           <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
-          <Bar dataKey="value" fill="#2563eb" />
+          <Bar dataKey="value" fill="var(--orabank-blue)" />
         </BarChart>
       </ResponsiveContainer>
     </div>

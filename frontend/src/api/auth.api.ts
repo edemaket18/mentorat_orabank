@@ -25,6 +25,11 @@ export interface AuthUser {
   };
 }
 
+export interface RegistrationResponse {
+  message: string;
+  user: AuthUser;
+}
+
 interface ApiAuthUser {
   _id: string;
   name?: string;
@@ -128,7 +133,7 @@ export const logout = async (): Promise<void> => {
 };
 
 // Inscription utilisateur
-export const register = async (name: string, email: string, password: string, role: any): Promise<AuthUser> => {
+export const register = async (name: string, email: string, password: string, role: any): Promise<RegistrationResponse> => {
   const [firstName, ...rest] = (name || '').trim().split(/\s+/);
   const lastName = rest.join(' ');
 
@@ -140,9 +145,10 @@ export const register = async (name: string, email: string, password: string, ro
     role: role === 'mentor' ? 'mentor' : 'intern',
   });
 
-  const user = normalizeAuthUser(res.data);
-  persistToken(user.token);
-  return user;
+  return {
+    message: res.data.message || "Votre demande d'inscription est en attente de validation.",
+    user: normalizeAuthUser(res.data),
+  };
 };
 
 // Vérifier l'authentification de l'utilisateur courant

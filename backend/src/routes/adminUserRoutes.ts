@@ -8,6 +8,7 @@ import {
   getUserById,
   updateUserRole,
   updateUserStatus,
+  approveUserRegistration,
   deleteUser
 } from '../controllers/adminUserController';
 import {
@@ -42,6 +43,8 @@ router.route('/users/:userId/role')
 
 router.route('/users/:userId/status')
   .put(userIdParamValidator, updateUserStatusValidator, updateUserStatus);
+
+router.patch('/users/:userId/approval', userIdParamValidator, approveUserRegistration);
 
 // Route de profil utilisateur
 router.put('/profile', updateProfile);

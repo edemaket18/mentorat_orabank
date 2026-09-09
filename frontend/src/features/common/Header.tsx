@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Avatar from './Avatar';
+import OrabankBrand from '../../components/common/OrabankBrand';
 
 interface HeaderProps {
   userName?: string;
@@ -15,13 +16,13 @@ const Header: React.FC<HeaderProps> = ({ userName, userAvatar }) => {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '1rem 2rem',
-        background: '#1976d2',
+        background: 'var(--orabank-blue)',
         color: '#fff',
       }}
     >
       <div>
         <Link to="/" style={{ color: '#fff', textDecoration: 'none', fontWeight: 'bold', fontSize: 24 }}>
-          Mon Application
+          <OrabankBrand compact />
         </Link>
       </div>
       <nav>

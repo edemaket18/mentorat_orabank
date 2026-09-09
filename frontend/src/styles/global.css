@@ -467,6 +467,37 @@ button:hover {
   font-size: 0.9rem;
 }
 
+.auth-success {
+  background: #e8f5e9;
+  color: #1b5e20;
+  padding: 1rem;
+  margin: 0 2rem 1rem;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.dashboard-action-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem 1.25rem;
+  margin-top: 1rem;
+}
+
+.dashboard-action-links a,
+.mentor-dashboard-list__item > span { color: #1d4ed8; font-weight: 600; }
+.dashboard-action-links a { display: inline-flex; align-items: center; gap: .35rem; }
+.mentor-dashboard-list { display: grid; gap: .75rem; margin-top: 1rem; }
+.mentor-dashboard-list__item { display: flex; justify-content: space-between; gap: 1rem; padding: .85rem 0; border-top: 1px solid #e5e7eb; }
+.mentor-dashboard-list__item div { display: grid; gap: .15rem; }
+.mentor-dashboard-list__item div span { color: #6b7280; font-weight: 400; font-size: .875rem; }
+
+.settings-page__form { display: grid; gap: 1rem; max-width: 52rem; margin-top: 1.25rem; }
+.settings-page__field { display: grid; gap: .45rem; color: var(--orabank-ink); font-weight: 700; }
+.settings-page__field input, .settings-page__field select { width: 100%; border: 1px solid #cbd5e1; border-radius: .5rem; padding: .7rem .8rem; background: #fff; font: inherit; font-weight: 400; }
+.settings-page__field input:focus, .settings-page__field select:focus { outline: 3px solid rgba(244, 180, 26, .24); border-color: var(--orabank-gold-deep); }
+.settings-page__check { display: flex; gap: .6rem; align-items: center; font-weight: 600; }
+
 /* Animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
