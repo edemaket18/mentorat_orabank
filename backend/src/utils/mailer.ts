@@ -13,7 +13,7 @@ export const sendAttestationEmail = async (user: any) => {
   });
 
   await transporter.sendMail({
-    from: '"Orabank Mentorat RH" <no-reply@orabank.tg>',
+    from: `"Orabank Mentorat RH" <${process.env.MAIL_USER}>`,
     to: user.email,
     subject: 'Attestation de stage Orabank',
     text: `Bonjour ${user.firstName},\n\nVeuillez trouver ci-joint votre attestation de stage.\n\nCordialement.`,
